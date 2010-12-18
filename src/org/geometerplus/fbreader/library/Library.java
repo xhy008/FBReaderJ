@@ -21,10 +21,14 @@ package org.geometerplus.fbreader.library;
 
 import java.io.File;
 import java.util.*;
+import java.lang.ref.WeakReference;
 
 import org.geometerplus.zlibrary.core.filesystem.*;
+import org.geometerplus.zlibrary.core.image.ZLImage;
 import org.geometerplus.zlibrary.core.util.ZLMiscUtil;
 
+import org.geometerplus.fbreader.formats.FormatPlugin;
+import org.geometerplus.fbreader.formats.PluginCollection;
 import org.geometerplus.fbreader.Paths;
 
 public final class Library {
@@ -37,7 +41,7 @@ public final class Library {
 	private final LibraryTree myLibraryByTag = new RootTree();
 	private final LibraryTree myRecentBooks = new RootTree();
 	private final LibraryTree myFavorites = new RootTree();
-	private final LibraryTree mySearchResult = new RootTree();
+	private LibraryTree mySearchResult = new RootTree();
 
 	private volatile int myState = STATE_NOT_INITIALIZED;
 
@@ -329,17 +333,20 @@ public final class Library {
 
 	public LibraryTree searchBooks(String pattern) {
 		waitForState(STATE_FULLY_INITIALIZED);
-		mySearchResult.clear();
+		final RootTree newSearchResults = new RootTree();
 		if (pattern != null) {
 			pattern = pattern.toLowerCase();
 			for (Book book : myBooks) {
 				if (book.matches(pattern)) {
-					mySearchResult.createBookSubTree(book, true);
+					newSearchResults.createBookSubTree(book, true);
 				}
 			}
-			mySearchResult.sortAllChildren();
+			newSearchResults.sortAllChildren();
+			if (newSearchResults.hasChildren()) {
+				mySearchResult = newSearchResults;
+			}
 		}
-		return mySearchResult;
+		return newSearchResults;
 	}
 
 	public static void addBookToRecentList(Book book) {
@@ -420,6 +427,36 @@ public final class Library {
 		BooksDatabase.Instance().deleteFromBookList(book.getId());
 		if ((removeMode & REMOVE_FROM_DISK) != 0) {
 			book.File.getPhysicalFile().delete();
+		}
+	}
+
+	private static final HashMap<String,WeakReference<ZLImage>> ourCoverMap =
+		new HashMap<String,WeakReference<ZLImage>>();
+	private static final WeakReference<ZLImage> NULL_IMAGE = new WeakReference<ZLImage>(null);
+
+	public static ZLImage getCover(ZLFile file) {
+		synchronized(ourCoverMap) {
+			final String path = file.getPath();
+			final WeakReference<ZLImage> ref = ourCoverMap.get(path);
+			if (ref == NULL_IMAGE) {
+				return null;
+			} else if (ref != null) {
+				final ZLImage image = ref.get();
+				if (image != null) {
+					return image;
+				}
+			}
+			ZLImage image = null;
+			final FormatPlugin plugin = PluginCollection.Instance().getPlugin(file);
+			if (plugin != null) {
+				image = plugin.readCover(file);
+			}
+			if (image == null) {
+				ourCoverMap.put(path, NULL_IMAGE);
+			} else {
+				ourCoverMap.put(path, new WeakReference<ZLImage>(image));
+			}
+			return image;
 		}
 	}
 }

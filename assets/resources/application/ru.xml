@@ -37,10 +37,10 @@
 			<node name="localSearch" value="Поиск"/>
 		</node>
 		<node name="openBook" value="Читать книгу"/>
+		<node name="showBookInfo" value="Информация о книге"/>
 		<node name="deleteBook" value="Удалить книгу"/>
 		<node name="addToFavorites" value="Добавить в избранное"/>
 		<node name="removeFromFavorites" value="Убрать из избранного"/>
-		<node name="permissionDenied" value="Нет доступа к файлам" />
 	</node>
 	<node name="networkView">
 		<node name="openCatalog" value="Открыть каталог"/>
@@ -102,6 +102,24 @@
 		<node name="series" value="Серия:" />
 		<node name="indexInSeries" value="Номер в серии:" />
 		<node name="tags" value="Категории:" />
+	</node>
+	<node name="bookInfo">
+		<node name="bookInfo" value="Информация о книге" />
+		<node name="fileInfo" value="Информация о файле" />
+		<node name="title" value="Название:" />
+		<node name="authors" value="Авторы:" />
+		<node name="series" value="Серия:" />
+		<node name="indexInSeries" value="Номер в серии:" />
+		<node name="tags" value="Категории:" />
+		<node name="name" value="Название:" />
+		<node name="type" value="Тип:" />
+		<node name="size" value="Размер:" />
+		<node name="time" value="Последнее изменение:" />
+		<node name="sizeInBytes" value="%s байт" />
+		<node name="sizeInKiloBytes" value="%s кБ" />
+		<node name="menu">
+			<node name="edit" value="Редактировать" />
+		</node>
 	</node>
 	<node name="bookDownloader">
 		<node name="tickerSuccess" value="Книга скачана" />
@@ -540,6 +558,8 @@
 		<node name="bookmarkNotFound" value="Нет подходящих закладок"/>
 		<node name="cannotOpenBook" value="Не удается открыть книгу"/>
 		<node name="dictNotInstalled" value="Не установлен поддерживаемый словарь"/>
+		<node name="permissionDenied" value="Нет доступа к файлам" />
+		<node name="noFavorites" value="Вы пока не добавили ни одной книги в «Избранное»"/>
 	</node>
 	<node name="external">
 		<node name="browser" value="браузере"/>

@@ -25,10 +25,20 @@
 		<node name="fileTree" value="File tree" toBeTranslated="true">
 			<node name="summary" value="Browse file system" toBeTranslated="true"/>
 		</node>
+		<node name="fileTreeRoot" value="Device" toBeTranslated="true">
+			<node name="summary" value="Full file system of the device" toBeTranslated="true"/>
+		</node>
+		<node name="fileTreeCard" value="Memory card" toBeTranslated="true">
+			<node name="summary" value="Memory card inserted into the device" toBeTranslated="true"/>
+		</node>
+		<node name="fileTreeLibrary" value="FBReader library" toBeTranslated="true">
+			<node name="summary" value="FBReader books directory" toBeTranslated="true"/>
+		</node>
 		<node name="menu">
 			<node name="localSearch" value="Místní hledání"/>
 		</node>
 		<node name="openBook" value="Otevřít knihu"/>
+		<node name="showBookInfo" value="Book info" toBeTranslated="true"/>
 		<node name="deleteBook" value="Odstranit knihu"/>
 		<node name="addToFavorites" value="Add to favorites" toBeTranslated="true"/>
 		<node name="removeFromFavorites" value="Remove from favorites" toBeTranslated="true"/>
@@ -93,6 +103,24 @@
 		<node name="series" value="Série:" />
 		<node name="indexInSeries" value="Díl v sérii:" />
 		<node name="tags" value="Štítky:" />
+	</node>
+	<node name="bookInfo">
+		<node name="bookInfo" value="Informace o knize" />
+		<node name="fileInfo" toBeTranslated="true" value="File Info" />
+		<node name="title" value="Název:" />
+		<node name="authors" value="Autoři:" />
+		<node name="series" value="Série:" />
+		<node name="indexInSeries" value="Díl v sérii:" />
+		<node name="tags" value="Štítky:" />
+		<node name="name" toBeTranslated="true" value="Name:" />
+		<node name="type" toBeTranslated="true" value="Type:" />
+		<node name="size" toBeTranslated="true" value="Size:" />
+		<node name="time" toBeTranslated="true" value="Last modified:" />
+		<node name="sizeInBytes" toBeTranslated="true" value="%s byte(s)" />
+		<node name="sizeInKiloBytes" toBeTranslated="true" value="%s kB" />
+		<node name="menu">
+			<node name="edit" toBeTranslated="true" value="Edit" />
+		</node>
 	</node>
 	<node name="bookDownloader">
 		<node name="tickerSuccess" value="Kniha byla stažena" />
@@ -528,6 +556,8 @@
 		<node name="bookNotFound" value="V knihovně nejsou bohužel žádné vhodné knihy"/>
 		<node name="bookmarkNotFound" value="Nejsou bohužel žádné vhodné záložky"/>
 		<node name="cannotOpenBook" value="Tuto knihu právě teď nelze bohužel otevřít"/>
+		<node name="permissionDenied" value="Permission denied, sorry" toBeTranslated="true"/>
+		<node name="noFavorites" value="Your favorites list is empty, sorry" toBeTranslated="true"/>
 	</node>
 	<node name="external">
 		<node name="browser" value="Prohlížeč"/>

@@ -30,20 +30,8 @@ import android.os.Message;
 
 import org.geometerplus.zlibrary.core.image.ZLLoadableImage;
 
-public class ZLAndroidImageLoader {
-	private static ZLAndroidImageLoader ourInstance;
-
-	public static ZLAndroidImageLoader Instance() {
-		if (ourInstance == null) {
-			ourInstance = new ZLAndroidImageLoader();
-		}
-		return ourInstance;
-	}
-
-	private ZLAndroidImageLoader() {
-	}
-
-	public void startImageLoading(final ZLLoadableImage image, Runnable postLoadingRunnable) {
+class ZLAndroidImageLoader {
+	void startImageLoading(final ZLLoadableImage image, Runnable postLoadingRunnable) {
 		LinkedList<Runnable> runnables = myOnImageSyncRunnables.get(image.getId());
 		if (runnables != null) {
 			if (!runnables.contains(postLoadingRunnable)) {
@@ -56,7 +44,10 @@ public class ZLAndroidImageLoader {
 		runnables.add(postLoadingRunnable);
 		myOnImageSyncRunnables.put(image.getId(), runnables);
 
-		myPool.execute(new Runnable() {
+		final ExecutorService pool =
+			image.sourceType() == ZLLoadableImage.SourceType.DISK
+				? mySinglePool : myPool;
+		pool.execute(new Runnable() {
 			public void run() {
 				image.synchronize();
 				myImageSynchronizedHandler.fireMessage(image.getId());
@@ -77,6 +68,7 @@ public class ZLAndroidImageLoader {
 	private static final int IMAGE_LOADING_THREADS_NUMBER = 3; // TODO: how many threads ???
 
 	private final ExecutorService myPool = Executors.newFixedThreadPool(IMAGE_LOADING_THREADS_NUMBER, new MinPriorityThreadFactory());
+	private final ExecutorService mySinglePool = Executors.newFixedThreadPool(1, new MinPriorityThreadFactory());
 
 	private final HashMap<String, LinkedList<Runnable>> myOnImageSyncRunnables = new HashMap<String, LinkedList<Runnable>>();
 
