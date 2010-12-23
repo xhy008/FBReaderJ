@@ -61,6 +61,8 @@
 		<node name="signOut" value="Kijelentkezés (%s)"/>
 		<node name="refillAccount" value="Számla feltöltése (Jelenleg: %s)"/>
 		<node name="refillTitle" value="Számla feltöltése"/>
+		<node name="refillViaSms" value="Send an SMS" toBeTranslated="true"/>
+		<node name="refillViaBrowser" value="Open page in browser" toBeTranslated="true"/>
 		<node name="refillSummary" value="Jelenleg: %s"/>
 		<node name="alreadyDownloading" value="Könyv letöltése folyamatban" />
 		<node name="alreadyDownloadingDemo" value="Minta letöltése folyamatban" />
@@ -108,6 +110,7 @@
 	<node name="bookInfo">
 		<node name="bookInfo" value="Könyv adatai" />
 		<node name="fileInfo" toBeTranslated="true" value="File Info" />
+		<node name="annotation" value="Fülszöveg" />
 		<node name="title" value="Cím:" />
 		<node name="authors" value="Szerzők:" />
 		<node name="series" value="Sorozat:" />
@@ -156,6 +159,8 @@
 		<node name="day" value="Nappali"/>
 		<node name="night" value="Éjjeli"/>
 		<node name="networkLibrary" value="Internetes könyvtár"/>
+		<node name="hyperlinksOnlyMode" value="Standard mode" toBeTranslated="true"/>
+		<node name="dictionaryMode" value="Dictionary mode" toBeTranslated="true"/>
 		<node name="navigate" value="Navigáció">
 			<node name="toc" value="Tartalomegyzék"/>
 			<node name="gotoHome" value="A dokumentum elejére"/>
@@ -181,6 +186,9 @@
 	</node>
 	<node name="dialog">
 		<node name="button">
+			<node name="install" value="Install" toBeTranslated="true" />
+			<node name="update" value="Update" toBeTranslated="true" />
+			<node name="skip" value="Skip" toBeTranslated="true" />
 			<node name="buy" value="Vásárlás" />
 			<node name="buyAndDownload" value="Vásárlás és letöltés" />
 			<node name="continue" toBeTranslated="true" value="Continue" />
@@ -189,6 +197,12 @@
 			<node name="openBook" value="Read" toBeTranslated="true" />
 			<node name="editInfo" value="Edit" toBeTranslated="true" />
 			<node name="reloadInfo" value="Reload" toBeTranslated="true" />
+		</node>
+		<node name="installPlugin">
+			<node name="title" value="Install plugin" toBeTranslated="true" />
+		</node>
+		<node name="updatePlugin">
+			<node name="title" value="Update plugin" toBeTranslated="true" />
 		</node>
 		<node name="BookInfo">
 			<node name="fileName" value="Fájlnév"/>
