@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2009-2011 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,8 +27,6 @@ import android.content.Intent;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
 import org.geometerplus.zlibrary.core.language.ZLLanguageUtil;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
-
-import org.geometerplus.zlibrary.text.hyphenation.ZLTextHyphenator;
 
 import org.geometerplus.fbreader.library.Book;
 
@@ -108,8 +106,6 @@ public class EditBookInfoActivity extends ZLPreferenceActivity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		if (myBook.save()) {
-			ZLTextHyphenator.Instance().load(myBook.getLanguage());
-		}
+		myBook.save();
 	}
 }

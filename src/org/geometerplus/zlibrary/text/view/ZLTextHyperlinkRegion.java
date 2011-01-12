@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2009-2011 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,14 +21,14 @@ package org.geometerplus.zlibrary.text.view;
 
 import java.util.List;
 
-class ZLTextHyperlinkRegion extends ZLTextElementRegion {
-	static Filter Filter = new Filter() {
+public class ZLTextHyperlinkRegion extends ZLTextElementRegion {
+	public static Filter Filter = new Filter() {
 		public boolean accepts(ZLTextElementRegion region) {
 			return region instanceof ZLTextHyperlinkRegion;
 		}
 	};
 
-	final ZLTextHyperlink Hyperlink;
+	public final ZLTextHyperlink Hyperlink;
 
 	ZLTextHyperlinkRegion(ZLTextHyperlink hyperlink, List<ZLTextElementArea> list, int fromIndex) {
 		super(list, fromIndex);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2009-2011 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,8 +21,8 @@ package org.geometerplus.zlibrary.text.view;
 
 import java.util.List;
 
-class ZLTextWordRegion extends ZLTextElementRegion {
-	final ZLTextWord Word;
+public class ZLTextWordRegion extends ZLTextElementRegion {
+	public final ZLTextWord Word;
 
 	ZLTextWordRegion(ZLTextWord word, List<ZLTextElementArea> list, int fromIndex) {
 		super(list, fromIndex);

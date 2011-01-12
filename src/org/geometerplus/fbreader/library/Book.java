@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2007-2011 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,7 +39,8 @@ public class Book {
 		}
 		book.loadLists();
 
-		final ZLPhysicalFile physicalFile = book.File.getPhysicalFile();
+		final ZLFile bookFile = book.File;
+		final ZLPhysicalFile physicalFile = bookFile.getPhysicalFile();
 		if (physicalFile == null) {
 			return book;
 		}
@@ -48,7 +49,7 @@ public class Book {
 		}
 
 		FileInfoSet fileInfos = new FileInfoSet(physicalFile);
-		if (fileInfos.check(physicalFile)) {
+		if (fileInfos.check(physicalFile, physicalFile != bookFile)) {
 			return book;
 		}
 		fileInfos.save();
@@ -62,7 +63,7 @@ public class Book {
 		}
 
 		final ZLPhysicalFile physicalFile = bookFile.getPhysicalFile();
-		if ((physicalFile != null) && !physicalFile.exists()) {
+		if (physicalFile != null && !physicalFile.exists()) {
 			return null;
 		}
 
@@ -73,7 +74,7 @@ public class Book {
 			book.loadLists();
 		}
 
-		if (book != null && fileInfos.check(physicalFile)) {
+		if (book != null && fileInfos.check(physicalFile, physicalFile != bookFile)) {
 			return book;
 		}
 		fileInfos.save();
@@ -113,6 +114,21 @@ public class Book {
 	Book(ZLFile file) {
 		myId = -1;
 		File = file;
+	}
+
+	public void reloadInfoFromFile() {
+		if (readMetaInfo()) {
+			save();
+		}
+	}
+
+	public void reloadInfoFromDatabase() {
+		final BooksDatabase database = BooksDatabase.Instance();
+		database.reloadBook(this);
+		myAuthors = database.loadAuthors(myId);
+		myTags = database.loadTags(myId);
+		mySeriesInfo = database.loadSeriesInfo(myId);
+		myIsSaved = true;
 	}
 
 	boolean readMetaInfo() {

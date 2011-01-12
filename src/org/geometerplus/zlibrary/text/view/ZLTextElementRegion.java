@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2009-2011 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,12 +23,12 @@ import java.util.*;
 
 import org.geometerplus.zlibrary.core.view.ZLPaintContext;
 
-abstract class ZLTextElementRegion {
-	static interface Filter {
+public abstract class ZLTextElementRegion {
+	public static interface Filter {
 		boolean accepts(ZLTextElementRegion region);
 	}
 
-	static Filter Filter = new Filter() {
+	public static Filter Filter = new Filter() {
 		public boolean accepts(ZLTextElementRegion region) {
 			return true;
 		}
@@ -60,35 +60,35 @@ abstract class ZLTextElementRegion {
 		return myHull;
 	}
 
-	public void draw(ZLPaintContext context) {
+	void draw(ZLPaintContext context) {
 		convexHull().draw(context);
 	}
 
-	public int distanceTo(int x, int y) {
+	int distanceTo(int x, int y) {
 		return convexHull().distanceTo(x, y);
 	}
 
-	public boolean isAtRightOf(ZLTextElementRegion other) {
+	boolean isAtRightOf(ZLTextElementRegion other) {
 		return
 			other == null ||
 			myList.get(myFromIndex).XStart >= other.myList.get(other.myToIndex - 1).XEnd;
 	}
 
-	public boolean isAtLeftOf(ZLTextElementRegion other) {
+	boolean isAtLeftOf(ZLTextElementRegion other) {
 		return other == null || other.isAtRightOf(this);
 	}
 
-	public boolean isUnder(ZLTextElementRegion other) {
+	boolean isUnder(ZLTextElementRegion other) {
 		return
 			other == null ||
 			myList.get(myFromIndex).YStart >= other.myList.get(other.myToIndex - 1).YEnd;
 	}
 
-	public boolean isOver(ZLTextElementRegion other) {
+	boolean isOver(ZLTextElementRegion other) {
 		return other == null || other.isUnder(this);
 	}
 
-	public boolean isExactlyUnder(ZLTextElementRegion other) {
+	boolean isExactlyUnder(ZLTextElementRegion other) {
 		if (other == null) {
 			return true;
 		}
@@ -107,7 +107,7 @@ abstract class ZLTextElementRegion {
 		return false;
 	}
 
-	public boolean isExactlyOver(ZLTextElementRegion other) {
+	boolean isExactlyOver(ZLTextElementRegion other) {
 		return other == null || other.isExactlyUnder(this);
 	}
 }

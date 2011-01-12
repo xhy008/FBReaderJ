@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2010-2011 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,23 +17,16 @@
  * 02110-1301, USA.
  */
 
-package org.geometerplus.android.fbreader.preferences;
+package org.geometerplus.android.fbreader.library;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.preference.Preference;
+import android.content.Intent;
+import android.os.Process;
 
-abstract class ZLSimplePreference extends Preference implements ZLPreference, Preference.OnPreferenceClickListener {
-	ZLSimplePreference(Context context) {
-		super(context);
-		setOnPreferenceClickListener(this);
+public class KillerCallback extends BroadcastReceiver {
+	@Override
+	public void onReceive(Context context, Intent intent) {
+		Process.killProcess(Process.myPid());
 	}
-
-	public abstract void onAccept();
-
-	public boolean onPreferenceClick(Preference preference) {
-		onClick();
-		return true;
-	}
-
-	public abstract void onClick();
 }

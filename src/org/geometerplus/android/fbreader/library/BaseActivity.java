@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2010-2011 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,6 +53,7 @@ abstract class BaseActivity extends ListActivity {
 	protected static final int RESULT_DONT_INVALIDATE_VIEWS = 0;
 	protected static final int RESULT_DO_INVALIDATE_VIEWS = 1;
 
+	static BooksDatabase DatabaseInstance;
 	static Library LibraryInstance;
 
 	protected final ZLResource myResource = ZLResource.resource("libraryView");
@@ -62,6 +63,7 @@ abstract class BaseActivity extends ListActivity {
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		Thread.setDefaultUncaughtExceptionHandler(new org.geometerplus.zlibrary.ui.android.library.UncaughtExceptionHandler(this));
+
 		mySelectedBookPath = getIntent().getStringExtra(SELECTED_BOOK_PATH_KEY);
 		setResult(RESULT_DONT_INVALIDATE_VIEWS);
 	}

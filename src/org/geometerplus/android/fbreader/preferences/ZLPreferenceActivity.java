@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2009-2011 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -59,11 +59,21 @@ abstract class ZLPreferenceActivity extends android.preference.PreferenceActivit
 		}
 
 		public ZLPreference addOption(ZLBooleanOption option, String resourceKey) {
-			ZLBooleanPreference preference =
-				new ZLBooleanPreference(ZLPreferenceActivity.this, option, Resource, resourceKey);
-			myScreen.addPreference(preference);
-			myPreferences.add(preference);
-			return preference;
+			return addPreference(
+				new ZLBooleanPreference(ZLPreferenceActivity.this, option, Resource, resourceKey)
+			);
+		}
+
+		public ZLPreference addOption(ZLStringOption option, String resourceKey) {
+			return addPreference(
+				new ZLStringOptionPreference(ZLPreferenceActivity.this, option, Resource, resourceKey)
+			);
+		}
+
+		public <T extends Enum<T>> ZLPreference addOption(ZLEnumOption<T> option, String resourceKey) {
+			return addPreference(
+				new ZLEnumPreference<T>(ZLPreferenceActivity.this, option, Resource, resourceKey)
+			);
 		}
 
 		public void close() {

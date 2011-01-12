@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2009-2011 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -58,6 +58,7 @@ public abstract class BooksDatabase {
 	// returns map fileId -> book
 	protected abstract Map<Long,Book> loadBooks(FileInfoSet infos);
 	protected abstract Book loadBook(long bookId);
+	protected abstract void reloadBook(Book book);
 	protected abstract Book loadBookByFile(long fileId, ZLFile file);
 
 	protected abstract List<Author> loadAuthors(long bookId);

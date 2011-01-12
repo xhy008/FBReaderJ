@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2007-2011 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,8 +42,17 @@ public final class FBReaderApp extends ZLApplication {
 	public final ZLBooleanOption UseSeparateBindingsOption =
 		new ZLBooleanOption("KeysOptions", "UseSeparateBindings", false);
 
-	public final ZLIntegerRangeOption TextViewModeOption =
-		new ZLIntegerRangeOption("Options", "TextViewMode", 0, 1, 0);
+	public final ZLBooleanOption EnableDoubleTapOption =
+		new ZLBooleanOption("Options", "EnableDoubleTap", true);
+	public final ZLBooleanOption NavigateAllWordsOption =
+		new ZLBooleanOption("Options", "NavigateAllWords", false);
+
+	public enum DictionaryTappingAction {
+		doNothing, selectWord, openDictionary
+	}
+	public final ZLEnumOption<DictionaryTappingAction> DictionaryTappingActionOption =
+		new ZLEnumOption<DictionaryTappingAction>("Options", "DictionaryTappingAction", DictionaryTappingAction.selectWord);
+
 	public final ZLIntegerRangeOption LeftMarginOption =
 		new ZLIntegerRangeOption("Options", "LeftMargin", 0, 30, 4);
 	public final ZLIntegerRangeOption RightMarginOption =

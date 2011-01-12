@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2010-2011 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,8 @@ package org.geometerplus.android.fbreader.library;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.os.Handler;
+import android.os.Message;
 
 public class InitializationService extends Service {
 	@Override
@@ -31,11 +33,22 @@ public class InitializationService extends Service {
 
 	@Override
 	public void onStart(Intent intent, int startId) {
-		final Thread libraryInitializer = new Thread(new Runnable() {
-			public void run() {
-				LibraryBaseActivity.LibraryInstance.synchronize();
+		final Handler handler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				stopSelf();
 			}
-		});
+		};
+
+		final Thread libraryInitializer = new Thread("LibraryInitializer") {
+			public void run() {
+				try {
+					LibraryBaseActivity.LibraryInstance.synchronize();
+				} finally {
+					handler.sendMessage(handler.obtainMessage(0));
+				}
+			}
+		};
 		libraryInitializer.setPriority(Thread.MIN_PRIORITY);
 		libraryInitializer.start();
 	}

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2009-2011 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -96,7 +96,7 @@ public final class FileInfoSet {
 		});
 	}
 
-	public boolean check(ZLPhysicalFile file) {
+	public boolean check(ZLPhysicalFile file, boolean processChildren) {
 		if (file == null) {
 			return true;
 		}
@@ -106,9 +106,13 @@ public final class FileInfoSet {
 			return true;
 		} else {
 			info.FileSize = fileSize;
-			removeChildren(info);
-			myInfosToSave.add(info);
-			addChildren(file);
+			if (processChildren) {
+				removeChildren(info);
+				myInfosToSave.add(info);
+				addChildren(file);
+			} else {
+				myInfosToSave.add(info);
+			}
 			return false;
 		}
 	}

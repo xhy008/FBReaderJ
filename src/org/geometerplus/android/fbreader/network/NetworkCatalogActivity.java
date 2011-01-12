@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2010-2011 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,6 @@ import org.geometerplus.zlibrary.core.network.ZLNetworkException;
 import org.geometerplus.fbreader.network.NetworkTree;
 import org.geometerplus.fbreader.network.NetworkCatalogItem;
 import org.geometerplus.fbreader.network.tree.*;
-import org.geometerplus.fbreader.network.authentication.NetworkAuthenticationManager;
 
 public class NetworkCatalogActivity extends NetworkBaseActivity implements UserRegistrationConstants {
 	public static final String CATALOG_LEVEL_KEY = "org.geometerplus.android.fbreader.network.CatalogLevel";
@@ -65,23 +64,25 @@ public class NetworkCatalogActivity extends NetworkBaseActivity implements UserR
 		}
 
 		myTree = networkView.getOpenedTree(level);
-		if (myTree == null) {
-			finish();
-			return;
-		}
 
 		networkView.setOpenedActivity(myCatalogKey, this);
 
 		setListAdapter(new CatalogAdapter());
 		getListView().invalidateViews();
 		setupTitle();
+		if (myTree instanceof NetworkCatalogTree &&
+			Util.isAccountRefillingSupported(this, ((NetworkCatalogTree)myTree).Item.Link)) {
+			setDefaultTree(new RefillAccountTree((NetworkCatalogTree)myTree));
+		}
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
 			case USER_REGISTRATION_REQUEST_CODE:
-				if (resultCode == RESULT_OK && data != null) {
+				if (myTree instanceof NetworkCatalogTree &&
+					resultCode == RESULT_OK &&
+					data != null) {
 					try {
 						Util.runAfterRegistration(
 							((NetworkCatalogTree)myTree).Item.Link.authenticationManager(),
@@ -139,17 +140,16 @@ public class NetworkCatalogActivity extends NetworkBaseActivity implements UserR
 		super.onResume();
 	}
 
-
 	private final class CatalogAdapter extends BaseAdapter {
 
 		private ArrayList<NetworkTree> mySpecialItems;
 
 		public CatalogAdapter() {
 			if (myTree instanceof NetworkCatalogRootTree) {
-				NetworkCatalogTree tree = (NetworkCatalogTree) myTree;
+				final NetworkCatalogRootTree rootTree = (NetworkCatalogRootTree)myTree;
 				mySpecialItems = new ArrayList<NetworkTree>();
-				if (Util.isAccountRefillingSupported(NetworkCatalogActivity.this, tree.Item.Link)) {
-					mySpecialItems.add(new RefillAccountTree(tree));
+				if (Util.isAccountRefillingSupported(NetworkCatalogActivity.this, rootTree.Item.Link)) {
+					mySpecialItems.add(new RefillAccountTree(rootTree));
 				}
 				if (mySpecialItems.size() > 0) {
 					mySpecialItems.trimToSize();

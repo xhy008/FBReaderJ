@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2007-2011 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@ import org.geometerplus.zlibrary.text.model.ZLTextModel;
 import org.geometerplus.zlibrary.text.view.*;
 import org.geometerplus.zlibrary.text.view.style.ZLTextStyleCollection;
 
+import org.geometerplus.fbreader.bookmodel.BookModel;
 import org.geometerplus.fbreader.bookmodel.FBHyperlinkType;
 import org.geometerplus.fbreader.bookmodel.TOCTree;
 
@@ -49,21 +50,21 @@ public final class FBView extends ZLTextView {
 	}
 
 	final void doScrollPage(boolean forward) {
-		final ScrollingPreferences preferences = ScrollingPreferences.Instance();
-		if (preferences.AnimateOption.getValue()) {
+		final boolean horizontal = ScrollingPreferences.Instance().HorizontalOption.getValue();
+		if (getAnimationType() != Animation.none) {
 			if (forward) {
 				ZLTextWordCursor cursor = getEndCursor();
 				if (cursor != null &&
 					!cursor.isNull() &&
 					(!cursor.isEndOfParagraph() || !cursor.getParagraphCursor().isLast())) {
-					startAutoScrolling(preferences.HorizontalOption.getValue() ? PAGE_RIGHT : PAGE_BOTTOM);
+					startAutoScrolling(horizontal ? PAGE_RIGHT : PAGE_BOTTOM);
 				}
 			} else {
 				ZLTextWordCursor cursor = getStartCursor();
 				if (cursor != null &&
 					!cursor.isNull() &&
 					(!cursor.isStartOfParagraph() || !cursor.getParagraphCursor().isFirst())) {
-					startAutoScrolling(preferences.HorizontalOption.getValue() ? PAGE_LEFT : PAGE_TOP);
+					startAutoScrolling(horizontal ? PAGE_LEFT : PAGE_TOP);
 				}
 			}
 		} else {
@@ -78,8 +79,8 @@ public final class FBView extends ZLTextView {
 	private boolean myIsBrightnessAdjustmentInProgress;
 	private int myStartBrightness;
 
-	public boolean onStylusPress(int x, int y) {
-		if (super.onStylusPress(x, y)) {
+	public boolean onFingerSingleTap(int x, int y) {
+		if (super.onFingerSingleTap(x, y)) {
 			return true;
 		}
 
@@ -95,29 +96,19 @@ public final class FBView extends ZLTextView {
 			}
 		}
 
-		final ZLTextHyperlink hyperlink = findHyperlink(x, y, 10);
-		if (hyperlink != null) {
-			selectHyperlink(hyperlink);
+		final ZLTextElementRegion region = findRegion(x, y, 10, ZLTextHyperlinkRegion.Filter);
+		if (region != null) {
+			selectRegion(region);
 			myReader.repaintView();
 			myReader.doAction(ActionCode.PROCESS_HYPERLINK);
-			//followHyperlink(hyperlink);
-			return true;
-		}
-
-		if (myReader.AllowScreenBrightnessAdjustmentOption.getValue() && x < myContext.getWidth() / 10) {
-			myIsBrightnessAdjustmentInProgress = true;
-			myStartY = y;
-			myStartBrightness = ZLibrary.Instance().getScreenBrightness();
 			return true;
 		}
 
 		final ScrollingPreferences preferences = ScrollingPreferences.Instance();
-		if (preferences.FlickOption.getValue()) {
-			myStartX = x;
-			myStartY = y;
-			setScrollingActive(true);
-			myIsManualScrollingActive = true;
-		} else {
+		final ScrollingPreferences.FingerScrolling fingerScrolling =
+			preferences.FingerScrollingOption.getValue();
+		if (fingerScrolling == ScrollingPreferences.FingerScrolling.byTap ||
+			fingerScrolling == ScrollingPreferences.FingerScrolling.byTapAndFlick) {
 			if (preferences.HorizontalOption.getValue()) {
 				if (x <= myContext.getWidth() / 3) {
 					doScrollPage(false);
@@ -133,12 +124,68 @@ public final class FBView extends ZLTextView {
 			}
 		}
 
-		//activateSelection(x, y);
 		return true;
 	}
 
-	public boolean onStylusMovePressed(int x, int y) {
-		if (super.onStylusMovePressed(x, y)) {
+	@Override
+	public boolean isDoubleTapSupported() {
+		return myReader.EnableDoubleTapOption.getValue();
+	}
+
+	@Override
+	public boolean onFingerDoubleTap(int x, int y) {
+		if (super.onFingerDoubleTap(x, y)) {
+			return true;
+		}
+		if (y <= myContext.getHeight() / 2) {
+			myReader.doAction(ActionCode.SHOW_NAVIGATION);
+		} else {
+			myReader.doAction(ActionCode.SHOW_MENU);
+		}
+		return true;
+	}
+
+	public boolean onFingerPress(int x, int y) {
+		if (super.onFingerPress(x, y)) {
+			return true;
+		}
+
+		if (isScrollingActive()) {
+			return false;
+		}
+
+		if (myReader.FooterIsSensitiveOption.getValue()) {
+			Footer footer = getFooterArea();
+			if (footer != null && y > myContext.getHeight() - footer.getTapHeight()) {
+				footer.setProgress(x);
+				return true;
+			}
+		}
+
+		if (myReader.AllowScreenBrightnessAdjustmentOption.getValue() && x < myContext.getWidth() / 10) {
+			myIsBrightnessAdjustmentInProgress = true;
+			myStartY = y;
+			myStartBrightness = ZLibrary.Instance().getScreenBrightness();
+			return true;
+		}
+
+		if (getAnimationType() != Animation.none) {
+			final ScrollingPreferences.FingerScrolling fingerScrolling =
+				ScrollingPreferences.Instance().FingerScrollingOption.getValue();
+			if (fingerScrolling == ScrollingPreferences.FingerScrolling.byFlick ||
+				fingerScrolling == ScrollingPreferences.FingerScrolling.byTapAndFlick) {
+				myStartX = x;
+				myStartY = y;
+				setScrollingActive(true);
+				myIsManualScrollingActive = true;
+			}
+		}
+
+		return true;
+	}
+
+	public boolean onFingerMove(int x, int y) {
+		if (super.onFingerMove(x, y)) {
 			return true;
 		}
 
@@ -182,8 +229,8 @@ public final class FBView extends ZLTextView {
 		return false;
 	}
 
-	public boolean onStylusRelease(int x, int y) {
-		if (super.onStylusRelease(x, y)) {
+	public boolean onFingerRelease(int x, int y) {
+		if (super.onFingerRelease(x, y)) {
 			return true;
 		}
 
@@ -218,7 +265,7 @@ public final class FBView extends ZLTextView {
 							((diff < 0) ? PAGE_RIGHT : PAGE_LEFT) :
 							((diff < 0) ? PAGE_BOTTOM : PAGE_TOP);
 					}
-					if (ScrollingPreferences.Instance().AnimateOption.getValue()) {
+					if (getAnimationType() != Animation.none) {
 						startAutoScrolling(viewPage);
 					} else {
 						myReader.scrollViewTo(PAGE_CENTRAL, 0);
@@ -233,6 +280,57 @@ public final class FBView extends ZLTextView {
 		return false;
 	}
 
+	public boolean onFingerLongPress(int x, int y) {
+		if (super.onFingerLongPress(x, y)) {
+			return true;
+		}
+
+		if (myReader.DictionaryTappingActionOption.getValue() !=
+			FBReaderApp.DictionaryTappingAction.doNothing) {
+			final ZLTextElementRegion region = findRegion(x, y, 10, ZLTextElementRegion.Filter);
+			if (region != null) {
+				selectRegion(region);
+				myReader.repaintView();
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public boolean onFingerMoveAfterLongPress(int x, int y) {
+		if (super.onFingerMoveAfterLongPress(x, y)) {
+			return true;
+		}
+
+		if (myReader.DictionaryTappingActionOption.getValue() !=
+			FBReaderApp.DictionaryTappingAction.doNothing) {
+			final ZLTextElementRegion region = findRegion(x, y, 10, ZLTextElementRegion.Filter);
+			if (region != null) {
+				selectRegion(region);
+				myReader.repaintView();
+			}
+		}
+		return true;
+	}
+
+	public boolean onFingerReleaseAfterLongPress(int x, int y) {
+		if (super.onFingerReleaseAfterLongPress(x, y)) {
+			return true;
+		}
+
+		if (myReader.DictionaryTappingActionOption.getValue() ==
+			FBReaderApp.DictionaryTappingAction.openDictionary) {
+			final ZLTextElementRegion region = currentRegion();
+			if (region instanceof ZLTextWordRegion) {
+				myReader.doAction(ActionCode.PROCESS_HYPERLINK);
+			}
+			return true;
+		}
+
+		return false;
+	}
+
 	public boolean onTrackballRotated(int diffX, int diffY) {
 		if (diffX == 0 && diffY == 0) {
 			return true;
@@ -242,7 +340,14 @@ public final class FBView extends ZLTextView {
 			(diffY > 0 ? Direction.DOWN : Direction.UP) :
 			(diffX > 0 ? Direction.RIGHT : Direction.LEFT);
 
-		if (!moveRegionPointer(direction)) {
+		ZLTextElementRegion region = currentRegion();
+		final ZLTextElementRegion.Filter filter =
+			region instanceof ZLTextWordRegion || myReader.NavigateAllWordsOption.getValue()
+				? ZLTextElementRegion.Filter : ZLTextHyperlinkRegion.Filter;
+		region = nextRegion(direction, filter);
+		if (region != null) {
+			selectRegion(region);
+		} else {
 			if (direction == Direction.DOWN) {
 				scrollPage(true, ZLTextView.ScrollingMode.SCROLL_LINES, 1);
 			} else if (direction == Direction.UP) {
@@ -253,11 +358,6 @@ public final class FBView extends ZLTextView {
 		myReader.repaintView();
 
 		return true;
-	}
-
-	@Override
-	public int getMode() {
-		return myReader.TextViewModeOption.getValue();
 	}
 
 	@Override
@@ -320,14 +420,19 @@ public final class FBView extends ZLTextView {
 		}
 
 		public void paint(ZLPaintContext context) {
-			if (myReader.Model == null) {
+			final FBReaderApp reader = myReader;
+			if (reader == null) {
+				return;
+			}
+			final BookModel model = reader.Model;
+			if (model == null) {
 				return;
 			}
 
 			final ZLColor bgColor = getBackgroundColor();
 			// TODO: separate color option for footer color
 			final ZLColor fgColor = getTextColor(FBHyperlinkType.NONE);
-			final ZLColor fillColor = myReader.getColorProfile().FooterFillOption.getValue();
+			final ZLColor fillColor = reader.getColorProfile().FooterFillOption.getValue();
 
 			final int left = getLeftMargin();
 			final int right = context.getWidth() - getRightMargin();
@@ -335,7 +440,7 @@ public final class FBView extends ZLTextView {
 			final int lineWidth = height <= 10 ? 1 : 2;
 			final int delta = height <= 10 ? 0 : 1;
 			context.setFont(
-				myReader.FooterFontOption.getValue(),
+				reader.FooterFontOption.getValue(),
 				height <= 10 ? height + 3 : height + 1,
 				height > 10, false, false
 			);
@@ -344,19 +449,19 @@ public final class FBView extends ZLTextView {
 			final int bookLength = computePageNumber();
 
 			final StringBuilder info = new StringBuilder();
-			if (myReader.FooterShowProgressOption.getValue()) {
+			if (reader.FooterShowProgressOption.getValue()) {
 				info.append(pagesProgress);
 				info.append("/");
 				info.append(bookLength);
 			}
-			if (myReader.FooterShowBatteryOption.getValue()) {
+			if (reader.FooterShowBatteryOption.getValue()) {
 				if (info.length() > 0) {
 					info.append(" ");
 				}
-				info.append(myReader.getBatteryLevel());
+				info.append(reader.getBatteryLevel());
 				info.append("%");
 			}
-			if (myReader.FooterShowClockOption.getValue()) {
+			if (reader.FooterShowClockOption.getValue()) {
 				if (info.length() > 0) {
 					info.append(" ");
 				}
@@ -388,8 +493,8 @@ public final class FBView extends ZLTextView {
 			context.setFillColor(fillColor);
 			context.fillRectangle(left + lineWidth, height - 2 * lineWidth, gaugeInternalRight, 2 * lineWidth);
 
-			if (myReader.FooterShowTOCMarksOption.getValue()) {
-				TOCTree toc = myReader.Model.TOCTree;
+			if (reader.FooterShowTOCMarksOption.getValue()) {
+				TOCTree toc = model.TOCTree;
 				if (toc != null) {
 					final int fullLength = sizeOfFullText();
 					for (TOCTree tocItem : toc) {
@@ -475,5 +580,10 @@ public final class FBView extends ZLTextView {
 	@Override
 	public void zoomOut() {
 		zoom(-1);
+	}
+
+	@Override
+	public Animation getAnimationType() {
+		return ScrollingPreferences.Instance().AnimationOption.getValue();
 	}
 }

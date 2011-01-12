@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2010-2011 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,8 +21,8 @@ package org.geometerplus.android.fbreader.network;
 
 import java.util.*;
 
+import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Message;
 import android.os.Handler;
 import android.view.Menu;
@@ -69,7 +69,7 @@ class NetworkCatalogActions extends NetworkTreeActions {
 	}
 
 	@Override
-	public void buildContextMenu(NetworkBaseActivity activity, ContextMenu menu, NetworkTree tree) {
+	public void buildContextMenu(Activity activity, ContextMenu menu, NetworkTree tree) {
 		final NetworkCatalogTree catalogTree = (NetworkCatalogTree) tree;
 		final NetworkCatalogItem item = catalogTree.Item;
 		menu.setHeaderTitle(tree.getName());
@@ -256,10 +256,7 @@ class NetworkCatalogActions extends NetworkTreeActions {
 				doSignOut(activity, (NetworkCatalogTree)tree);
 				return true;
 			case REFILL_ACCOUNT_ITEM_ID:
-				Util.openInBrowser(
-					activity,
-					((NetworkCatalogTree)tree).Item.Link.authenticationManager().refillAccountLink()
-				);
+				new RefillAccountActions().runStandalone(activity, ((RefillAccountTree)activity.getDefaultTree()).Link);
 				return true;
 			case CUSTOM_CATALOG_EDIT:
 				NetworkDialog.show(activity, NetworkDialog.DIALOG_CUSTOM_CATALOG, ((NetworkCatalogTree)tree).Item.Link, null);
@@ -393,59 +390,9 @@ class NetworkCatalogActions extends NetworkTreeActions {
 		}
 	}
 
-	private void runInstallPluginDialog(final NetworkBaseActivity activity, Map<String,String> pluginData, final Runnable postRunnable) {
-		final String plugin = pluginData.get("androidPlugin");
-		if (plugin != null) {
-			final String pluginVersion = pluginData.get("androidPluginVersion");
-
-			String dialogKey = null;
-			String message = null;
-			String positiveButtonKey = null;
-			
-			if (!PackageUtil.isPluginInstalled(activity, plugin)) {
-				dialogKey = "installPlugin";
-				message = pluginData.get("androidPluginInstallMessage");
-				positiveButtonKey = "install";
-			} else if (!PackageUtil.isPluginInstalled(activity, plugin, pluginVersion)) {
-				dialogKey = "updatePlugin";
-				message = pluginData.get("androidPluginUpdateMessage");
-				positiveButtonKey = "update";
-			}
-			if (dialogKey != null) {
-				final ZLResource dialogResource = ZLResource.resource("dialog");
-				final ZLResource buttonResource = dialogResource.getResource("button");
-				new AlertDialog.Builder(activity)
-					.setTitle(dialogResource.getResource(dialogKey).getResource("title").getValue())
-					.setMessage(message)
-					.setIcon(0)
-					.setPositiveButton(
-						buttonResource.getResource(positiveButtonKey).getValue(),
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								PackageUtil.installFromMarket(activity, plugin);
-							}
-						}
-					)
-					.setNegativeButton(
-						buttonResource.getResource("skip").getValue(),
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								postRunnable.run();
-							}
-						}
-					)
-					.create().show();
-				return;
-			}
-		}
-		postRunnable.run();
-	}
-
 	private void processExtraData(final NetworkBaseActivity activity, Map<String,String> extraData, final Runnable postRunnable) {
 		if (extraData != null && !extraData.isEmpty()) {
-			runInstallPluginDialog(activity, extraData, postRunnable);
+			PackageUtil.runInstallPluginDialog(activity, extraData, postRunnable);
 		} else {
 			postRunnable.run();
 		}

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2010-2011 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 
+import org.geometerplus.zlibrary.core.filesystem.ZLFile;
+
+import org.geometerplus.fbreader.library.Book;
 import org.geometerplus.fbreader.library.BookTree;
 import org.geometerplus.fbreader.tree.FBTree;
 
@@ -33,6 +36,11 @@ public class LibraryTreeActivity extends LibraryBaseActivity {
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
+
+		if (DatabaseInstance == null || LibraryInstance == null) {
+			finish();
+			return;
+		}
 
 		final Intent intent = getIntent();
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
@@ -84,11 +92,21 @@ public class LibraryTreeActivity extends LibraryBaseActivity {
 			}
 			tree = tree.getSubTreeByName(path[i]);
 		}
+
+		mySelectedBook = null;
+		if (mySelectedBookPath != null) {
+			final ZLFile file = ZLFile.createFileByPath(mySelectedBookPath);
+			if (file != null) {
+				mySelectedBook = Book.getByFile(file);
+			}
+		}
         
 		if (tree != null) {
 			final LibraryAdapter adapter = new LibraryAdapter(tree.subTrees());
 			setListAdapter(adapter);
 			getListView().setOnCreateContextMenuListener(adapter);
+			System.err.println("SELECTED: " + adapter.getFirstSelectedItemIndex());
+			setSelection(adapter.getFirstSelectedItemIndex());
 		}
 	}
 
@@ -98,7 +116,7 @@ public class LibraryTreeActivity extends LibraryBaseActivity {
 		if (tree instanceof BookTree) {
 			showBookInfo(((BookTree)tree).Book);
 		} else {
-			new OpenTreeRunnable(myTreePathString + "\000" + tree.getName()).run();
+			new OpenTreeRunnable(LibraryInstance, myTreePathString + "\000" + tree.getName()).run();
 		}
 	}
 }

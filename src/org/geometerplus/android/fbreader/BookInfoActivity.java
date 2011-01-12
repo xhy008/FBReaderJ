@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2010-2011 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,6 +36,7 @@ import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.image.ZLImage;
 import org.geometerplus.zlibrary.core.image.ZLLoadableImage;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
+import org.geometerplus.zlibrary.core.language.ZLLanguageUtil;
 
 import org.geometerplus.zlibrary.ui.android.R;
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageData;
@@ -113,7 +114,8 @@ public class BookInfoActivity extends Activity {
 		});
 		setupButton(R.id.book_info_button_reload, "reloadInfo", new View.OnClickListener() {
 			public void onClick(View view) {
-				// TODO: implement
+				book.reloadInfoFromFile();
+				setupBookInfo(book);
 			}
 		});
 
@@ -218,6 +220,7 @@ public class BookInfoActivity extends Activity {
 			}
 		}
 		setupInfoPair(R.id.book_tags, "tags", buffer);
+		setupInfoPair(R.id.book_language, "language", ZLLanguageUtil.languageName(book.getLanguage()));
 	}
 
 	private void setupAnnotation(Book book) {
