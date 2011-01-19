@@ -426,16 +426,6 @@ public final class FileManager extends BaseActivity {
 
 		public View getView(int position, View convertView, ViewGroup parent) {
             final FileItem item = getItem(position);
-<<<<<<< HEAD
-			final View view = createView(convertView, parent, item.getName(), item.getSummary());
-			if (isItemSelected(item)) {
-				view.setBackgroundColor(0xff555555);
-			} else {
-				view.setBackgroundColor(0);
-			}
-			final ImageView coverView = getCoverView(view);
-			final Bitmap coverBitmap = getCoverBitmap(item.getCover());
-=======
             View view = null;
 
             if (myViewType == ViewType.SIMPLE){
@@ -447,7 +437,7 @@ public final class FileManager extends BaseActivity {
     			}
     			final ImageView coverView = getCoverView(view);
     			final Bitmap coverBitmap = getCoverBitmap(item.getCover());
->>>>>>> file-manager-2
+			}
 
 			if (coverBitmap != null) {
 				coverView.setImageBitmap(coverBitmap);
