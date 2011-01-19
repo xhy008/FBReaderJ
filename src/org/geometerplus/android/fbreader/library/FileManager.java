@@ -249,24 +249,24 @@ public final class FileManager extends BaseActivity {
 		));
 	}
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-    	Log.v(LOG, "onCreateOptionsMenu");
-    	super.onCreateOptionsMenu(menu);
-    	addMenuItem(menu, 0, "insert", R.drawable.ic_menu_sorting);
-    	addMenuItem(menu, 1, "mkdir", R.drawable.ic_menu_mkdir);
-    	addMenuItem(menu, 2, "sorting", R.drawable.ic_menu_sorting);
-    	addMenuItem(menu, 3, "view", R.drawable.ic_menu_sorting);	
-    	return true;
-    }
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		Log.v(LOG, "onCreateOptionsMenu");
+		super.onCreateOptionsMenu(menu);
+		addMenuItem(menu, 0, "insert", R.drawable.ic_menu_sorting);
+		addMenuItem(menu, 1, "mkdir", R.drawable.ic_menu_mkdir);
+		addMenuItem(menu, 2, "sorting", R.drawable.ic_menu_sorting);
+		addMenuItem(menu, 3, "view", R.drawable.ic_menu_sorting);	
+		return true;
+	}
 
-    private MenuItem addMenuItem(Menu menu, int index, String resourceKey, int iconId) {
-        final String label = myResource.getResource("menu").getResource(resourceKey).getValue();
-        final MenuItem item = menu.add(0, index, Menu.NONE, label);
-        item.setIcon(iconId);
-        return item;
-    }
-    
+	private MenuItem addMenuItem(Menu menu, int index, String resourceKey, int iconId) {
+		final String label = myResource.getResource("menu").getResource(resourceKey).getValue();
+		final MenuItem item = menu.add(0, index, Menu.NONE, label);
+		item.setIcon(iconId);
+		return item;
+	}
+	
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		Log.v(LOG, "onPrepareOptionsMenu - start");
@@ -275,58 +275,58 @@ public final class FileManager extends BaseActivity {
 		if (myInsertPathStatic == null){
 			menu.findItem(0).setVisible(false).setEnabled(false);
 			menu.findItem(1).setVisible(false).setEnabled(false);
-        }else{
-        	menu.findItem(0).setVisible(true).setEnabled(true);
+		}else{
+			menu.findItem(0).setVisible(true).setEnabled(true);
 			menu.findItem(1).setVisible(true).setEnabled(true);
-        }
+		}
 		
 		Log.v(LOG, "onPrepareOptionsMenu - finish");
 		return true;
 	}
 
-    private Runnable messFileMoved = new Runnable() {
+	private Runnable messFileMoved = new Runnable() {
 		public void run() {
 			Toast.makeText(FileManager.this,
 					myResource.getResource("messFileMoved").getValue(), 
 					Toast.LENGTH_SHORT).show();
 		}
 	};
-    
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-	    	case 0:
-	    		try {
-	    			FileUtil.moveFile(myInsertPathStatic, myPath);
-	    			myInsertPathStatic = null;
-	    			refresh();
-	    			runOnUiThread(messFileMoved);
-	    		} catch (IOException e) {
-    				Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-    			}
-	    		return true;
-        	case 1:
-        		new MkDirDialog(this, myPath, myInsertPathStatic).show();
-        		return true;
-        	case 2:
-        		new SortingDialog(this, myPath).show();
-	            return true;
-        	case 3:
-        		new ViewChangeDialog(this, myPath).show();
-        		return true;
-        	default:
-        		return super.onOptionsItemSelected(item);
-        }
-    }
-    
-    public void refresh(){
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case 0:
+				try {
+					FileUtil.moveFile(myInsertPathStatic, myPath);
+					myInsertPathStatic = null;
+					refresh();
+					runOnUiThread(messFileMoved);
+				} catch (IOException e) {
+					Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+				}
+				return true;
+			case 1:
+				new MkDirDialog(this, myPath, myInsertPathStatic).show();
+				return true;
+			case 2:
+				new SortingDialog(this, myPath).show();
+				return true;
+			case 3:
+				new ViewChangeDialog(this, myPath).show();
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+	}
+	
+	public void refresh(){
 		startActivityForResult(
 				new Intent(this, FileManager.class)
 					.putExtra(FILE_MANAGER_PATH, myPath)
 					.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP),
 				FileManager.CHILD_LIST_REQUEST
 		);
-    }
+	}
 
 	private boolean isItemSelected(FileItem item) {
 		if (mySelectedBookPath == null || !item.isSelectable()) {
@@ -392,14 +392,7 @@ public final class FileManager extends BaseActivity {
 		public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
 			if (myPath == null)
 				return;
-			//final int position = ((AdapterView.AdapterContextMenuInfo)menuInfo).position;
-			
-			final int position;
-			if (myViewType == ViewType.SIMPLE){
-				position = ((AdapterView.AdapterContextMenuInfo)menuInfo).position;
-			} else {
-				position = ((GalleryAdapter)myGallery.getAdapter()).position;
-			}
+			final int position = ((AdapterView.AdapterContextMenuInfo)menuInfo).position;
 			
 			final FileItem item = getItem(position);
 
@@ -425,26 +418,22 @@ public final class FileManager extends BaseActivity {
 		}
 
 		public View getView(int position, View convertView, ViewGroup parent) {
-            final FileItem item = getItem(position);
-            View view = null;
-
-            if (myViewType == ViewType.SIMPLE){
-            	view = createView(convertView, parent, item.getName(), item.getSummary());
-				if (isItemSelected(item)) {
-    				view.setBackgroundColor(0xff555555);
-    			} else {
-    				view.setBackgroundColor(0);
-    			}
-    			final ImageView coverView = getCoverView(view);
-    			final Bitmap coverBitmap = getCoverBitmap(item.getCover());
+			final FileItem item = getItem(position);
+			final View view = createView(convertView, parent, item.getName(), item.getSummary());
+			if (isItemSelected(item)) {
+				view.setBackgroundColor(0xff555555);
+			} else {
+				view.setBackgroundColor(0);
 			}
+			final ImageView coverView = getCoverView(view);
+			final Bitmap coverBitmap = getCoverBitmap(item.getCover());
 
 			if (coverBitmap != null) {
 				coverView.setImageBitmap(coverBitmap);
 			} else {
 				coverView.setImageResource(item.getIcon());
 			}
-            return view;
+			return view;
 		}
 	}
 
