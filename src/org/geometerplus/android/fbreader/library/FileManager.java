@@ -284,7 +284,6 @@ public final class FileManager extends BaseActivity {
 		return true;
 	}
 
-    
     private Runnable messFileMoved = new Runnable() {
 		public void run() {
 			Toast.makeText(FileManager.this,
@@ -328,7 +327,7 @@ public final class FileManager extends BaseActivity {
 				FileManager.CHILD_LIST_REQUEST
 		);
     }
-    
+
 	private boolean isItemSelected(FileItem item) {
 		if (mySelectedBookPath == null || !item.isSelectable()) {
 			return false;
@@ -393,7 +392,15 @@ public final class FileManager extends BaseActivity {
 		public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
 			if (myPath == null)
 				return;
-			final int position = ((AdapterView.AdapterContextMenuInfo)menuInfo).position;
+			//final int position = ((AdapterView.AdapterContextMenuInfo)menuInfo).position;
+			
+			final int position;
+			if (myViewType == ViewType.SIMPLE){
+				position = ((AdapterView.AdapterContextMenuInfo)menuInfo).position;
+			} else {
+				position = ((GalleryAdapter)myGallery.getAdapter()).position;
+			}
+			
 			final FileItem item = getItem(position);
 
 			menu.setHeaderTitle(item.getName());
@@ -419,6 +426,7 @@ public final class FileManager extends BaseActivity {
 
 		public View getView(int position, View convertView, ViewGroup parent) {
             final FileItem item = getItem(position);
+<<<<<<< HEAD
 			final View view = createView(convertView, parent, item.getName(), item.getSummary());
 			if (isItemSelected(item)) {
 				view.setBackgroundColor(0xff555555);
@@ -427,6 +435,19 @@ public final class FileManager extends BaseActivity {
 			}
 			final ImageView coverView = getCoverView(view);
 			final Bitmap coverBitmap = getCoverBitmap(item.getCover());
+=======
+            View view = null;
+
+            if (myViewType == ViewType.SIMPLE){
+            	view = createView(convertView, parent, item.getName(), item.getSummary());
+				if (isItemSelected(item)) {
+    				view.setBackgroundColor(0xff555555);
+    			} else {
+    				view.setBackgroundColor(0);
+    			}
+    			final ImageView coverView = getCoverView(view);
+    			final Bitmap coverBitmap = getCoverBitmap(item.getCover());
+>>>>>>> file-manager-2
 
 			if (coverBitmap != null) {
 				coverView.setImageBitmap(coverBitmap);
