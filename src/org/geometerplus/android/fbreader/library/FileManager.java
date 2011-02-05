@@ -73,8 +73,8 @@ public final class FileManager extends BaseActivity {
 	private boolean myVeiwFlag = false;
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	public void onCreate(Bundle icicle) {
+		super.onCreate(icicle);
 
 		if (DatabaseInstance == null || LibraryInstance == null) {
 			finish();
