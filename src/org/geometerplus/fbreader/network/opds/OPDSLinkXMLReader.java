@@ -32,6 +32,7 @@ import org.geometerplus.fbreader.network.NetworkLibrary;
 import org.geometerplus.fbreader.network.atom.ATOMLink;
 import org.geometerplus.fbreader.network.atom.ATOMUpdated;
 import org.geometerplus.fbreader.network.authentication.NetworkAuthenticationManager;
+import org.geometerplus.fbreader.network.authentication.BasicAuthenticationManager;
 import org.geometerplus.fbreader.network.authentication.litres.LitResAuthenticationManager;
 
 class OPDSLinkXMLReader extends OPDSXMLReader implements OPDSConstants, MimeTypes {
@@ -188,7 +189,7 @@ class OPDSLinkXMLReader extends OPDSXMLReader implements OPDSConstants, MimeType
 
 			NetworkAuthenticationManager authManager = null;
 			if (myAuthenticationType == "basic") {
-				//authManager = NetworkAuthenticationManager.createManager(opdsLink, sslCertificate, BasicAuthenticationManager.class);
+				authManager = NetworkAuthenticationManager.createManager(opdsLink, sslCertificate, BasicAuthenticationManager.class);
 			} else if (myAuthenticationType == "litres") {
 				authManager = NetworkAuthenticationManager.createManager(opdsLink, sslCertificate, LitResAuthenticationManager.class);
 			}

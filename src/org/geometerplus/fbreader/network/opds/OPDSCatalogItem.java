@@ -72,7 +72,7 @@ class OPDSCatalogItem extends NetworkCatalogItem {
 
 	@Override
 	public final void loadChildren(NetworkOperationData.OnNewItemListener listener) throws ZLNetworkException {
-		OPDSNetworkLink opdsLink = (OPDSNetworkLink) Link;
+		OPDSNetworkLink opdsLink = (OPDSNetworkLink)Link;
 
 		myLoadingState = opdsLink.createOperationData(Link, listener);
 

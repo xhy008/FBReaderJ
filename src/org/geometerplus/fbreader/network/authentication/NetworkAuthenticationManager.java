@@ -38,6 +38,8 @@ public abstract class NetworkAuthenticationManager {
 		if (mgr == null) {
 			if (managerClass == LitResAuthenticationManager.class) {
 				mgr = new LitResAuthenticationManager(link, sslCertificate);
+			} else if (managerClass == BasicAuthenticationManager.class) {
+				mgr = new BasicAuthenticationManager(link, sslCertificate);
 			}
 			if (mgr != null) {
 				ourManagers.put(link.getSiteName(), mgr);
