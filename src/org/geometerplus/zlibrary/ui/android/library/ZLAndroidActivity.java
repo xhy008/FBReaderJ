@@ -23,11 +23,13 @@ import java.lang.reflect.*;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.content.*;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.view.*;
 import android.os.PowerManager;
+import android.util.AttributeSet;
 
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
@@ -90,6 +92,8 @@ public abstract class ZLAndroidActivity extends Activity {
 	public void onCreate(Bundle state) {
 		super.onCreate(state);
 		Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler(this));
+
+		setMenuBackground();
 
 		if (state != null) {
 			myOrientation = state.getInt(REQUESTED_ORIENTATION_KEY, ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
@@ -303,4 +307,35 @@ public abstract class ZLAndroidActivity extends Activity {
 			);
 		}
 	};
+
+	private void setMenuBackground() {
+		getLayoutInflater().setFactory(new LayoutInflater.Factory() {
+			@Override
+			public View onCreateView(String name, Context context, AttributeSet attrs) {
+				System.err.println("onCreateView 0");
+				if ("com.android.internal.view.menu.IconMenuItemView".equalsIgnoreCase(name)) {
+					System.err.println("onCreateView 1");
+					try {
+					System.err.println("onCreateView 2");
+						final LayoutInflater f = getLayoutInflater();
+					System.err.println("onCreateView 3");
+						final View view = f.createView(name, null, attrs);
+					System.err.println("onCreateView 4");
+						new Handler().post(new Runnable() {
+							public void run() {
+								//view.setBackgroundResource(android.R.drawable.screen_background_light);
+					System.err.println("onCreateView 5");
+								view.setBackgroundColor(0xFF0000);
+							}
+						});
+					System.err.println("onCreateView 6");
+						return view;
+					} catch (Throwable t) {
+						t.printStackTrace();
+					}
+				}
+				return null;
+			}
+		});
+	}
 }
