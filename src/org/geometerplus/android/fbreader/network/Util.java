@@ -38,8 +38,12 @@ import org.geometerplus.android.util.PackageUtil;
 abstract class Util implements UserRegistrationConstants {
 	private static final String REGISTRATION_ACTION =
 		"android.fbreader.action.NETWORK_LIBRARY_REGISTER";
-	private static final String SMS_REFILLING_ACTION =
+	private static final String SMS_TOPUP_ACTION =
 		"android.fbreader.action.NETWORK_LIBRARY_SMS_REFILLING";
+	private static final String CREDIT_CARD_TOPUP_ACTION =
+		"android.fbreader.action.NETWORK_LIBRARY_CREDIT_CARD_REFILLING";
+	private static final String PAYMENT_MACHINE_TOPUP_ACTION =
+		"android.fbreader.action.NETWORK_LIBRARY_PAYMENT_MACHINE_REFILLING";
 
 	private static boolean testService(Activity activity, String action, String url) {
 		return url != null && PackageUtil.canBeStarted(activity, new Intent(action, Uri.parse(url)));
@@ -92,7 +96,7 @@ abstract class Util implements UserRegistrationConstants {
 	static boolean isSmsAccountRefillingSupported(Activity activity, INetworkLink link) {
 		return testService(
 			activity,
-			SMS_REFILLING_ACTION,
+			SMS_TOPUP_ACTION,
 			link.getUrlInfo(INetworkLink.URL_MAIN).URL
 		);
 	}
@@ -100,7 +104,7 @@ abstract class Util implements UserRegistrationConstants {
 	static void runSmsDialog(Activity activity, INetworkLink link) {
 		try {
 			final Intent intent = new Intent(
-				SMS_REFILLING_ACTION,
+				SMS_TOPUP_ACTION,
 				Uri.parse(link.getUrlInfo(INetworkLink.URL_MAIN).URL)
 			);
 			final NetworkAuthenticationManager mgr = link.authenticationManager();

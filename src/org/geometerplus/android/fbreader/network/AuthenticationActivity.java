@@ -20,36 +20,113 @@
 package org.geometerplus.android.fbreader.network;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Handler;
-import android.os.Message;
+//import android.app.AlertDialog;
+//import android.app.Dialog;
+//import android.content.DialogInterface;
+import android.os.Bundle;
+//import android.os.Handler;
+//import android.os.Message;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.geometerplus.zlibrary.core.resources.ZLResource;
-import org.geometerplus.zlibrary.core.network.ZLNetworkException;
+//import org.geometerplus.zlibrary.core.network.ZLNetworkException;
 
 import org.geometerplus.zlibrary.ui.android.R;
 
-import org.geometerplus.fbreader.network.INetworkLink;
-import org.geometerplus.fbreader.network.NetworkLibrary;
-import org.geometerplus.fbreader.network.authentication.NetworkAuthenticationManager;
+//import org.geometerplus.fbreader.network.INetworkLink;
+//import org.geometerplus.fbreader.network.NetworkLibrary;
+//import org.geometerplus.fbreader.network.authentication.NetworkAuthenticationManager;
 
-import org.geometerplus.android.util.UIUtil;
+//import org.geometerplus.android.util.UIUtil;
 
-class AuthenticationDialog {
-	private static AuthenticationDialog ourDialog;
+public class AuthenticationActivity extends Activity {
+	private ZLResource myResource;
 
-	public static AuthenticationDialog getDialog() {
-		if (ourDialog == null) {
-			ourDialog = new AuthenticationDialog();
+	@Override
+	public void onCreate(Bundle icicle) {
+		super.onCreate(icicle);
+		Thread.setDefaultUncaughtExceptionHandler(new org.geometerplus.zlibrary.ui.android.library.UncaughtExceptionHandler(this));
+		setContentView(R.layout.authentication);
+
+		myResource = ZLResource.resource("dialog").getResource("AuthenticationDialog");
+
+		setTitle(myResource.getResource("title").getValue());
+
+		setTextFromResource(R.id.authentication_login_label, "login");
+		setTextFromResource(R.id.authentication_password_label, "password");
+		setTextFromResource(R.id.authentication_register, "register");
+		((TextView)findViewById(R.id.authentication_register)).setOnClickListener(
+			new View.OnClickListener() {
+				public void onClick(View view) {
+					if (Util.isRegistrationSupported(AuthenticationActivity.this, myLink)) {
+						finish();
+						Util.runRegistrationDialog(AuthenticationActivity.this, myLink);
+					}
+				}
+			}
+		);
+
+		setupButton(
+			R.id.authentication_ok_button, "ok", new View.OnClickListener() {
+				public void onClick(View view) {
+					final InputMethodManager imm =
+						(InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+					imm.hideSoftInputFromWindow(findViewById(R.id.authentication_login).getWindowToken(), 0);
+					imm.hideSoftInputFromWindow(findViewById(R.id.authentication_password).getWindowToken(), 0);
+					//onOkButton();
+				}
+			}
+		);
+		setupButton(
+			R.id.authentication_cancel_button, "cancel", new View.OnClickListener() {
+				public void onClick(View view) {
+					finish();
+				}
+			}
+		);
+
+		/*
+		final Intent intent = getIntent();
+		myLink = NetworkLibraryActivity.getLinkFromIntent(intent);
+		final Uri uri = intent.getData();
+
+		if (myLink != null) {
+			setTextById(R.id.add_custom_catalog_url, myLink.getUrlInfo(INetworkLink.URL_MAIN).URL);
+			setTextById(R.id.add_custom_catalog_title, myLink.getTitle());
+			setTextById(R.id.add_custom_catalog_summary, myLink.getSummary());
+			setExtraFieldsVisibility(true);
+		} else if (uri != null) {
+			loadInfoByUri(uri);
+		} else {
+			setExtraFieldsVisibility(false);
 		}
-		return ourDialog;
+		*/
 	}
 
+	private void setTextById(int id, String text) {
+		((TextView)findViewById(id)).setText(text);
+	}
+
+	private String getTextById(int id) {
+		final String text = ((TextView)findViewById(id)).getText().toString();
+		return text != null ? text.trim() : null;
+	}
+
+	private void setupButton(int id, String resourceKey, View.OnClickListener listener) {
+		final Button button = (Button)findViewById(id);
+		button.setText(
+			ZLResource.resource("dialog").getResource("button").getResource(resourceKey).getValue()
+		);
+		button.setOnClickListener(listener);
+	}
+
+	private void setTextFromResource(int id, String resourceKey) {
+		setTextById(id, myResource.getResource(resourceKey).getValue());
+	}
+	/*
 	private class DialogHandler extends Handler {
 		@Override
 		public void handleMessage(Message message) {
@@ -72,8 +149,6 @@ class AuthenticationDialog {
 	};
 
 
-	private final ZLResource myResource =
-		ZLResource.resource("dialog").getResource("AuthenticationDialog");
 
 	private INetworkLink myLink;
 	private String myErrorMessage;
@@ -83,8 +158,7 @@ class AuthenticationDialog {
 	private final DialogHandler myHandler = new DialogHandler();
 
 	public static void show(Activity activity, INetworkLink link, Runnable onSuccessRunnable) {
-		//getDialog().showInternal(activity, link, onSuccessRunnable);
-		activity.startActivity(new Intent(activity, AuthenticationActivity.class));
+		getDialog().showInternal(activity, link, onSuccessRunnable);
 	}
 
 	private void showInternal(Activity activity, INetworkLink link, Runnable onSuccessRunnable) {
@@ -219,4 +293,5 @@ class AuthenticationDialog {
 		dlgView.invalidate();
 		dlgView.requestLayout();
 	}
+	*/
 }

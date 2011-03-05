@@ -145,19 +145,21 @@
 		>
 			<Button
 				android:id="@+id/add_custom_catalog_ok_button"
-				android:layout_width="wrap_content"
+				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:maxLines="1"
 				android:layout_marginLeft="10dp"
 				android:layout_marginRight="10dp"
-				android:layout_weight="1"
 			/>
 			<Button
 				android:id="@+id/add_custom_catalog_cancel_button"
-				android:layout_width="wrap_content"
+				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:maxLines="1"
 				android:layout_marginLeft="10dp"
 				android:layout_marginRight="10dp"
-				android:layout_weight="1"
 			/>
 		</LinearLayout>
 	</LinearLayout>
