@@ -40,11 +40,11 @@ import org.geometerplus.fbreader.network.*;
 import org.geometerplus.fbreader.network.tree.NetworkTreeFactory;
 import org.geometerplus.fbreader.network.tree.NetworkCatalogTree;
 import org.geometerplus.fbreader.network.tree.NetworkCatalogRootTree;
+import org.geometerplus.fbreader.network.opds.BasketItem;
 import org.geometerplus.fbreader.network.authentication.*;
 
 
 class NetworkCatalogActions extends NetworkTreeActions {
-
 	public static final int OPEN_CATALOG_ITEM_ID = 0;
 	public static final int OPEN_IN_BROWSER_ITEM_ID = 1;
 	public static final int RELOAD_ITEM_ID = 2;
@@ -55,6 +55,9 @@ class NetworkCatalogActions extends NetworkTreeActions {
 
 	public static final int CUSTOM_CATALOG_EDIT = 7;
 	public static final int CUSTOM_CATALOG_REMOVE = 8;
+
+	public static final int BASKET_CLEAR = 9;
+	public static final int BASKET_BUY_ALL_BOOKS = 10;
 
 	@Override
 	public boolean canHandleTree(NetworkTree tree) {
@@ -78,7 +81,8 @@ class NetworkCatalogActions extends NetworkTreeActions {
 		boolean hasItems = false;
 
 		final String catalogUrl = item.URLByType.get(NetworkCatalogItem.URL_CATALOG);
-		if (catalogUrl != null) {
+		if (catalogUrl != null &&
+			(!(item instanceof BasketItem) || item.Link.basket().bookIds().size() > 0)) {
 			addMenuItem(menu, OPEN_CATALOG_ITEM_ID, "openCatalog");
 			hasItems = true;
 		}
@@ -153,6 +157,10 @@ class NetworkCatalogActions extends NetworkTreeActions {
 		addOptionsItem(menu, SIGNUP_ITEM_ID, "signUp");
 		addOptionsItem(menu, SIGNOUT_ITEM_ID, "signOut", "");
 		addOptionsItem(menu, REFILL_ACCOUNT_ITEM_ID, "refillAccount");
+		if (((NetworkCatalogTree)tree).Item instanceof BasketItem) {
+			addOptionsItem(menu, BASKET_CLEAR, "clearBasket");
+			addOptionsItem(menu, BASKET_BUY_ALL_BOOKS, "buyAllBooks");
+		}
 		return true;
 	}
 
@@ -221,43 +229,56 @@ class NetworkCatalogActions extends NetworkTreeActions {
 		if (consumeByVisibility(activity, tree, actionCode)) {
 			return true;
 		}
+		final NetworkCatalogTree catalogTree = (NetworkCatalogTree)tree;
 		switch (actionCode) {
 			case OPEN_CATALOG_ITEM_ID:
-				doExpandCatalog(activity, (NetworkCatalogTree)tree);
+			{
+				final NetworkCatalogItem item = catalogTree.Item;
+				if (item instanceof BasketItem && item.Link.basket().bookIds().size() == 0) {
+					UIUtil.showErrorMessage(activity, "emptyBasket");
+				} else {
+					doExpandCatalog(activity, catalogTree);
+				}
 				return true;
+			}
 			case OPEN_IN_BROWSER_ITEM_ID:
 				Util.openInBrowser(
 					activity,
-					((NetworkCatalogTree)tree).Item.URLByType.get(NetworkCatalogItem.URL_HTML_PAGE)
+					catalogTree.Item.URLByType.get(NetworkCatalogItem.URL_HTML_PAGE)
 				);
 				return true;
 			case RELOAD_ITEM_ID:
-				doReloadCatalog(activity, (NetworkCatalogTree)tree);
+				doReloadCatalog(activity, catalogTree);
 				return true;
 			case SIGNIN_ITEM_ID:
-				AuthenticationDialog.show(activity, ((NetworkCatalogTree)tree).Item.Link, null);
+				AuthenticationDialog.show(activity, catalogTree.Item.Link, null);
 				return true;
 			case SIGNUP_ITEM_ID:
-				Util.runRegistrationDialog(activity, ((NetworkCatalogTree)tree).Item.Link);
+				Util.runRegistrationDialog(activity, catalogTree.Item.Link);
 				return true;
 			case SIGNOUT_ITEM_ID:
-				doSignOut(activity, (NetworkCatalogTree)tree);
+				doSignOut(activity, catalogTree);
 				return true;
 			case REFILL_ACCOUNT_ITEM_ID:
-				new RefillAccountActions().runStandalone(activity, ((NetworkCatalogTree)tree).Item.Link);
+				new RefillAccountActions().runStandalone(activity, catalogTree.Item.Link);
 				return true;
 			case CUSTOM_CATALOG_EDIT:
 			{
 				final Intent intent = new Intent(activity, AddCustomCatalogActivity.class);
 				NetworkLibraryActivity.addLinkToIntent(
 					intent,
-					(ICustomNetworkLink)((NetworkCatalogTree)tree).Item.Link
+					(ICustomNetworkLink)catalogTree.Item.Link
 				);
 				activity.startActivity(intent);
 				return true;
 			}
 			case CUSTOM_CATALOG_REMOVE:
-				removeCustomLink((ICustomNetworkLink)((NetworkCatalogTree)tree).Item.Link);
+				removeCustomLink((ICustomNetworkLink)catalogTree.Item.Link);
+				return true;
+			case BASKET_CLEAR:
+				catalogTree.Item.Link.basket().clear();
+				return true;
+			case BASKET_BUY_ALL_BOOKS:
 				return true;
 		}
 		return false;
@@ -274,8 +295,8 @@ class NetworkCatalogActions extends NetworkTreeActions {
 		}
 
 		@Override
-		public void onUpdateItems(List<NetworkLibraryItem> items) {
-			for (NetworkLibraryItem item: items) {
+		public void onUpdateItems(List<NetworkItem> items) {
+			for (NetworkItem item: items) {
 				myTree.ChildrenItems.add(item);
 				NetworkTreeFactory.createNetworkTree(myTree, item);
 			}
@@ -290,7 +311,7 @@ class NetworkCatalogActions extends NetworkTreeActions {
 
 		@Override
 		public void onFinish(String errorMessage, boolean interrupted,
-				Set<NetworkLibraryItem> uncommitedItems) {
+				Set<NetworkItem> uncommitedItems) {
 			if (interrupted &&
 					(!myTree.Item.supportsResumeLoading() || errorMessage != null)) {
 				myTree.ChildrenItems.clear();

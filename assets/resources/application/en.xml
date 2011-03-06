@@ -113,6 +113,8 @@
 			<node name="addCustomCatalog" value="Add catalog"/>
 			<node name="refreshCatalogsList" value="Refresh catalogs"/>
 			<node name="languages" value="Language filter"/>
+			<node name="clearBasket" value="Clear basket"/>
+			<node name="buyAllBooks" value="Buy all books"/>
 		</node>
 	</node>
 	<node name="networkBookView">
@@ -124,6 +126,7 @@
 		<node name="series" value="Series:" />
 		<node name="indexInSeries" value="Index in series:" />
 		<node name="tags" value="Tags:" />
+		<node name="catalog" value="Catalog:" />
 	</node>
 	<node name="bookInfo">
 		<node name="bookInfo" value="Book Info" />
@@ -622,6 +625,7 @@
 		<node name="permissionDenied" value="Permission denied, sorry"/>
 		<node name="noFavorites" value="Your favorites list is empty, sorry"/>
 		<node name="emptyCatalog" value="Catalog is empty, sorry" />
+		<node name="emptyBasket" value="Your basket is empty, sorry" />
 	</node>
 	<node name="external">
 		<node name="browser" value="Browser"/>

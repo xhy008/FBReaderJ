@@ -26,7 +26,6 @@ import org.geometerplus.zlibrary.core.util.ZLNetworkUtil;
 
 import org.geometerplus.fbreader.network.*;
 import org.geometerplus.fbreader.network.atom.*;
-import org.geometerplus.fbreader.network.authentication.litres.LitResBasketItem;
 import org.geometerplus.fbreader.network.authentication.litres.LitResBookshelfItem;
 import org.geometerplus.fbreader.network.authentication.litres.LitResRecommendationsItem;
 
@@ -43,7 +42,7 @@ class NetworkOPDSFeedReader implements OPDSFeedReader, OPDSConstants, MimeTypes 
 	private int myItemsToLoad = -1;
 
 	/**
-	 * Creates new OPDSFeedReader instance that can be used to get NetworkLibraryItem objects from OPDS feeds.
+	 * Creates new OPDSFeedReader instance that can be used to get NetworkItem objects from OPDS feeds.
 	 *
 	 * @param baseURL    string that contains URL of the OPDS feed, that will be read using this instance of the reader
 	 * @param result     network results buffer. Must be created using OPDSNetworkLink corresponding to the OPDS feed, 
@@ -204,7 +203,7 @@ class NetworkOPDSFeedReader implements OPDSFeedReader, OPDSConstants, MimeTypes 
 			}
 		}
 
-		NetworkLibraryItem item;
+		NetworkItem item;
 		if (hasBookLink) {
 			item = readBookItem(entry);
 		} else {
@@ -219,7 +218,7 @@ class NetworkOPDSFeedReader implements OPDSFeedReader, OPDSConstants, MimeTypes 
 	private static final String AuthorPrefix = "author:";
 	private static final String AuthorsPrefix = "authors:";
 
-	private NetworkLibraryItem readBookItem(OPDSEntry entry) {
+	private NetworkItem readBookItem(OPDSEntry entry) {
 		final OPDSNetworkLink opdsNetworkLink = (OPDSNetworkLink)myData.Link;
 		/*final String date;
 		if (entry.DCIssued != null) {
@@ -369,7 +368,7 @@ class NetworkOPDSFeedReader implements OPDSFeedReader, OPDSConstants, MimeTypes 
 		}
 	}
 
-	private NetworkLibraryItem readCatalogItem(OPDSEntry entry) {
+	private NetworkItem readCatalogItem(OPDSEntry entry) {
 		final OPDSNetworkLink opdsLink = (OPDSNetworkLink)myData.Link;
 		String coverURL = null;
 		String url = null;
@@ -459,7 +458,9 @@ class NetworkOPDSFeedReader implements OPDSFeedReader, OPDSConstants, MimeTypes 
 					opdsLink.getCondition(entry.Id.Uri)
 				);
 			} else if (REL_BASKET.equals(litresRel)) {
-				return new LitResBasketItem(
+				return null;
+				/*
+				return new BasketItem(
 					opdsLink,
 					entry.Title,
 					annotation,
@@ -467,6 +468,7 @@ class NetworkOPDSFeedReader implements OPDSFeedReader, OPDSConstants, MimeTypes 
 					urlMap,
 					opdsLink.getCondition(entry.Id.Uri)
 				);
+				*/
 			} else if (REL_TOPUP.equals(litresRel)) {
 				return new TopUpItem(opdsLink, coverURL);
 			} else {

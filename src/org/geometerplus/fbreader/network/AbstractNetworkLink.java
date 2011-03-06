@@ -22,13 +22,16 @@ package org.geometerplus.fbreader.network;
 import java.util.*;
 
 import org.geometerplus.zlibrary.core.util.ZLMiscUtil;
+import org.geometerplus.zlibrary.core.options.ZLStringListOption;
 
-public abstract class AbstractNetworkLink implements INetworkLink {
+public abstract class AbstractNetworkLink implements INetworkLink, Basket {
 	protected String mySiteName;
 	protected String myTitle;
 	protected String mySummary;
 	protected final String myLanguage;
 	protected final TreeMap<String,UrlInfo> myInfos;
+
+	private ZLStringListOption myBooksInBasketOption;
 
 	/**
 	 * Creates new NetworkLink instance.
@@ -74,6 +77,55 @@ public abstract class AbstractNetworkLink implements INetworkLink {
 
 	public final Set<String> getUrlKeys() {
 		return myInfos.keySet();
+	}
+
+	public final void setSupportsBasket() {
+		if (myBooksInBasketOption == null) {
+			myBooksInBasketOption = new ZLStringListOption(mySiteName, "Basket", null);
+		}
+	}
+
+	public final Basket basket() {
+		return myBooksInBasketOption != null ? this : null;
+	}
+
+	// method from Basket interface
+	public final void add(NetworkBookItem book) {
+		if (book.Id != null && !"".equals(book.Id)) {
+			List<String> ids = myBooksInBasketOption.getValue();
+			if (!ids.contains(book.Id)) {
+				ids = new ArrayList(ids);
+				ids.add(book.Id);
+				myBooksInBasketOption.setValue(ids);
+			}
+		}
+	}
+
+	// method from Basket interface
+	public final void remove(NetworkBookItem book) {
+		if (book.Id != null && !"".equals(book.Id)) {
+			List<String> ids = myBooksInBasketOption.getValue();
+			if (ids.contains(book.Id)) {
+				ids = new ArrayList(ids);
+				ids.remove(book.Id);
+				myBooksInBasketOption.setValue(ids);
+			}
+		}
+	}
+
+	// method from Basket interface
+	public final void clear() {
+		myBooksInBasketOption.setValue(null);
+	}
+
+	// method from Basket interface
+	public final boolean contains(NetworkBookItem book) {
+		return myBooksInBasketOption.getValue().contains(book.Id);
+	}
+
+	// method from Basket interface
+	public final List<String> bookIds() {
+		return myBooksInBasketOption.getValue();
 	}
 
 	public NetworkOperationData createOperationData(NetworkOperationData.OnNewItemListener listener) {
