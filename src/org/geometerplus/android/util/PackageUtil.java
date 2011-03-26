@@ -27,7 +27,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ActivityNotFoundException;
-import android.content.pm.PackageManager;
+import android.content.pm.*;
 import android.net.Uri;
 import android.view.View;
 import android.widget.TextView;
@@ -54,19 +54,36 @@ public abstract class PackageUtil {
 	public static boolean isPluginInstalled(Activity activity, String pkg) {
 		return canBeStarted(
 			activity,
-			new Intent("android.fbreader.action.TEST", homeUri(pkg))
+			new Intent("android.fbreader.action.TEST", homeUri(pkg)),
+			true
 		);
 	}
 
 	public static boolean isPluginInstalled(Activity activity, String pkg, String version) {
 		return canBeStarted(
 			activity,
-			new Intent("android.fbreader.action.TEST", homeUri(pkg, version))
+			new Intent("android.fbreader.action.TEST", homeUri(pkg, version)),
+			true
 		);
 	}
 
-	public static boolean canBeStarted(Context context, Intent intent) {
-		return context.getApplicationContext().getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null;
+	public static boolean canBeStarted(Context context, Intent intent, boolean checkSignature) {
+		final PackageManager manager = context.getApplicationContext().getPackageManager();
+		final ResolveInfo info =
+			manager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+		if (info == null) {
+			return false;
+		}
+		final ActivityInfo activityInfo = info.activityInfo;
+		if (activityInfo == null) {
+			return false;
+		}
+		if (!checkSignature) {
+			return true;
+		}
+		return
+			PackageManager.SIGNATURE_MATCH ==
+			manager.checkSignatures(context.getPackageName(), activityInfo.packageName);
 	}
 
 	public static boolean installFromMarket(Activity activity, String pkg) {

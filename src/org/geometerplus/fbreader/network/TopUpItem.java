@@ -17,38 +17,17 @@
  * 02110-1301, USA.
  */
 
-package org.geometerplus.android.fbreader.network;
+package org.geometerplus.fbreader.network;
 
 import org.geometerplus.zlibrary.core.resources.ZLResource;
 
-import org.geometerplus.zlibrary.ui.android.R;
-
-import org.geometerplus.fbreader.network.NetworkLibraryItem;
-import org.geometerplus.fbreader.network.NetworkTree;
-
-import org.geometerplus.android.fbreader.tree.ZLAndroidTree;
-
-public class AddCustomCatalogItemTree extends NetworkTree implements ZLAndroidTree {
-	public AddCustomCatalogItemTree() {
-		super(1);
-	}
-
-	@Override
-	public String getName() {
-		return ZLResource.resource("networkView").getResource("addCustomCatalog").getValue();
-	}
-
-	@Override
-	public String getSummary() {
-		return ZLResource.resource("networkView").getResource("addCustomCatalogSummary").getValue();
-	}
-
-	@Override
-	public NetworkLibraryItem getHoldedItem() {
-		return null;
-	}
-
-	public int getCoverResourceId() {
-		return R.drawable.ic_list_plus;
+public class TopUpItem extends NetworkItem {
+	public TopUpItem(INetworkLink link, String cover) {
+		super(
+			link,
+			ZLResource.resource("networkView").getResource("topupTitle").getValue(),
+			ZLResource.resource("networkView").getResource("topupSummary").getValue(),
+			cover
+		);
 	}
 }

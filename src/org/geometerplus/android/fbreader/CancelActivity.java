@@ -49,22 +49,18 @@ public class CancelActivity extends ListActivity {
 			myIntent = intent;
 		}
 
-		@Override
 		public final int getCount() {
 			return myIntent.getIntExtra(LIST_SIZE, 0);
 		}
 
-		@Override
 		public final Integer getItem(int position) {
 			return position;
 		}
 
-		@Override
 		public final long getItemId(int position) {
 			return position;
 		}
 
-		@Override
 		public View getView(int position, View convertView, final ViewGroup parent) {
 			final View view = convertView != null
 				? convertView
@@ -77,12 +73,12 @@ public class CancelActivity extends ListActivity {
 			if (summary != null) {
 				summaryView.setVisibility(View.VISIBLE);
 				summaryView.setText(summary);
-        		titleView.setLayoutParams(new LinearLayout.LayoutParams(
+				titleView.setLayoutParams(new LinearLayout.LayoutParams(
 					LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
 				));
 			} else {
 				summaryView.setVisibility(View.GONE);
-        		titleView.setLayoutParams(new LinearLayout.LayoutParams(
+				titleView.setLayoutParams(new LinearLayout.LayoutParams(
 					LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT
 				));
 			}

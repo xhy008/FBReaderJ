@@ -21,13 +21,12 @@ package org.geometerplus.fbreader.network.opds;
 
 import java.util.*;
 
-import org.geometerplus.zlibrary.core.network.ZLNetworkManager;
 import org.geometerplus.zlibrary.core.network.ZLNetworkException;
 import org.geometerplus.zlibrary.core.network.ZLNetworkRequest;
 
 import org.geometerplus.fbreader.network.*;
 
-class OPDSCatalogItem extends NetworkCatalogItem {
+public class OPDSCatalogItem extends NetworkURLCatalogItem {
 	static class State extends NetworkOperationData {
 		public String LastLoadedId;
 		public final HashSet<String> LoadedIds = new HashSet<String>();
@@ -44,24 +43,17 @@ class OPDSCatalogItem extends NetworkCatalogItem {
 		myExtraData = extraData;
 	}
 
-	OPDSCatalogItem(INetworkLink link, String title, String summary, String cover, Map<Integer, String> urlByType, int visibility, int catalogType) {
-		super(link, title, summary, cover, urlByType, visibility, catalogType);
+	public OPDSCatalogItem(INetworkLink link, String title, String summary, String cover, Map<Integer, String> urlByType, Accessibility accessibility, int flags) {
+		super(link, title, summary, cover, urlByType, accessibility, flags);
 		myExtraData = null;
 	}
 
-	private void doLoadChildren(NetworkOperationData.OnNewItemListener listener,
-			ZLNetworkRequest networkRequest) throws ZLNetworkException {
-		while (networkRequest != null) {
-			try {
-				ZLNetworkManager.Instance().perform(networkRequest);
-			} catch (ZLNetworkException e) {
-				myLoadingState = null;
-				throw e;
-			}
-			if (listener.confirmInterrupt()) {
-				return;
-			}
-			networkRequest = myLoadingState.resume();
+	private void doLoadChildren(ZLNetworkRequest networkRequest) throws ZLNetworkException {
+		try {
+			super.doLoadChildren(myLoadingState, networkRequest);
+		} catch (ZLNetworkException e) {
+			myLoadingState = null;
+			throw e;
 		}
 	}
 
@@ -70,16 +62,20 @@ class OPDSCatalogItem extends NetworkCatalogItem {
 		return myExtraData;
 	}
 
+	protected String getUrl() {
+		return URLByType.get(URL_CATALOG);
+	}
+
 	@Override
 	public final void loadChildren(NetworkOperationData.OnNewItemListener listener) throws ZLNetworkException {
 		OPDSNetworkLink opdsLink = (OPDSNetworkLink) Link;
 
-		myLoadingState = opdsLink.createOperationData(Link, listener);
+		myLoadingState = opdsLink.createOperationData(listener);
 
 		ZLNetworkRequest networkRequest =
-			opdsLink.createNetworkData(URLByType.get(URL_CATALOG), myLoadingState);
+			opdsLink.createNetworkData(getUrl(), myLoadingState);
 
-		doLoadChildren(listener, networkRequest);
+		doLoadChildren(networkRequest);
 	}
 
 	@Override
@@ -92,7 +88,7 @@ class OPDSCatalogItem extends NetworkCatalogItem {
 		if (myLoadingState != null) {
 			myLoadingState.Listener = listener;
 			ZLNetworkRequest networkRequest = myLoadingState.resume();
-			doLoadChildren(listener, networkRequest);
+			doLoadChildren(networkRequest);
 		}
 	}
 }

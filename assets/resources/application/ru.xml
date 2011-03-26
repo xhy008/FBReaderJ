@@ -46,6 +46,18 @@
 		<node name="removeFromFavorites" value="Убрать из избранного"/>
 	</node>
 	<node name="networkView">
+		<node name="byAuthor" value="Авторы">
+			<node name="summary" value="Книги, разложенные по авторам"/>
+		</node>
+		<node name="byTitle" value="Названия">
+			<node name="summary" value="Книги, разложенные по названиям"/>
+		</node>
+		<node name="byDate" value="Дата">
+			<node name="summary" value="Книги, разложенные по дате покупки"/>
+		</node>
+		<node name="bySeries" value="По сериям">
+			<node name="summary" value="Книги, разложенные по сериям"/>
+		</node>
 		<node name="openCatalog" value="Открыть каталог"/>
 		<node name="showResults" value="Показать результаты"/>
 		<node name="showBooks" value="Показать книги"/>
@@ -56,16 +68,20 @@
 		<node name="deleteDemo" value="Удалить фрагмент"/>
 		<node name="downloadDemo" value="Скачать фрагмент"/>
 		<node name="buy" value="Купить (%s)"/>
+		<node name="addToBasket" value="Добавить в корзину"/>
+		<node name="removeFromBasket" value="Убрать из корзины"/>
 		<node name="openInBrowser" value="Показать в браузере" />
 		<node name="stopLoading" value="Остановить загрузку" />
 		<node name="stopSearching" value="Остановить поиск" />
 		<node name="signIn" value="Войти"/>
 		<node name="signOut" value="Выйти (%s)"/>
-		<node name="refillAccount" value="Пополнить счёт (текущий счёт: %s)" />
-		<node name="refillTitle" value="Пополнить счёт"/>
-		<node name="refillViaSms" value="Варианты SMS"/>
-		<node name="refillViaBrowser" value="Окно браузера"/>
-		<node name="refillSummary" value="Текущий счёт: %s"/>
+		<node name="topup" value="Пополнить счёт (текущий счёт: %s)" />
+		<node name="topupTitle" value="Пополнить счёт"/>
+		<node name="topupViaCreditCard" value="Кредитной картой"/>
+		<node name="topupViaSelfServiceKiosk" value="В платежном терминале"/>
+		<node name="topupViaSms" value="Платной SMS"/>
+		<node name="topupViaBrowser" value="В окне браузера"/>
+		<node name="topupSummary" value="Текущий счёт: %s"/>
 		<node name="alreadyDownloading" value="Книга загружается" />
 		<node name="alreadyDownloadingDemo" value="Фрагмент загружается" />
 		<node name="stoppingCatalogLoading" value="Остановка загрузки" />
@@ -93,7 +109,7 @@
 			<node name="signIn" value="Войти"/>
 			<node name="signOut" value="Выйти (%s)"/>
 			<node name="signUp" value="Регистрация"/>
-			<node name="refillAccount" value="Пополнить счёт"/>
+			<node name="topup" value="Пополнить счёт"/>
 			<node name="addCustomCatalog" value="Добавить каталог"/>
 			<node name="refreshCatalogsList" value="Обновить каталоги"/>
 			<node name="languages" value="Фильтр по языку"/>
@@ -108,6 +124,7 @@
 		<node name="series" value="Серия:" />
 		<node name="indexInSeries" value="Номер в серии:" />
 		<node name="tags" value="Категории:" />
+		<node name="catalog" value="Каталог:" />
 	</node>
 	<node name="bookInfo">
 		<node name="bookInfo" value="Информация о книге" />
@@ -159,6 +176,8 @@
 	<node name="cancelMenu">
 		<node name="previousBook" value="Открыть предыдущую книгу"/>
 		<node name="returnTo" value="Вернуться к ..."/>
+		<node name="back" value="Back" toBeTranslated="true"/>
+		<node name="forward" value="Forward" toBeTranslated="true"/>
 		<node name="close" value="Закрыть FBReader"/>
 	</node>
 	<node name="menu">
@@ -205,7 +224,7 @@
 			<node name="openBook" value="Читать" />
 			<node name="editInfo" value="Изменить" />
 			<node name="reloadInfo" value="Обновить" />
-			<node name="refillAccount" value="Пополнить счёт"/>
+			<node name="topup" value="Пополнить счёт"/>
 		</node>
 		<node name="plugin">
 			<node name="installTitle" value="Установка дополнения"/>
@@ -238,6 +257,10 @@
 				<node name="showStatusBar" value="Показывать строку состояния">
 					<node name="summaryOn" value="Строка состояния видна во время чтения"/>
 					<node name="summaryOff" value="Строка состояния не видна во время чтения"/>
+				</node>
+				<node name="showStatusBarWhenMenuIsActive" value="Показывать строку состояния при активации меню">
+					<node name="summaryOn" value="Показывать строку состояния, когда меню появляется на экране"/>
+					<node name="summaryOff" value="Не показывать строку состояния, когда меню появляется на экране"/>
 				</node>
 			</node>
 			<node name="text" value="Текст">
@@ -402,6 +425,7 @@
 				<node name="selectionBackground" value="Фон пометки"/>
 				<node name="text" value="Обычный текст"/>
 				<node name="hyperlink" value="Гиперссылка"/>
+				<node name="hyperlinkVisited" value="Visited hyperlink text" toBeTranslated="true"/>
 				<node name="highlighting" value="Фон результатов поиска"/>
 				<node name="footer" value="Подвал"/>
 			</node>
@@ -507,6 +531,28 @@
 					<node name="summaryOff" value="При перемещении с помощью кнопок помечать только гиперссылки"/>
 				</node>
 			</node>
+			<node name="cancelMenu" value="Меню выхода из программы">
+				<node name="summary" value="Список действий при нажатии на кнопку 'Назад'"/>
+				<node name="previousBook" value="Предыдущая книга">
+					<node name="summaryOn" value="Показать пункт меню для возврата к предыдущей книге"/>
+					<node name="summaryOff" value="Не нужна возможность возврата к предыдущей книге"/>
+				</node>
+				<node name="positions" value="Возврат по ссылкам">
+					<node name="summaryOn" value="Показывать пункты меню для последних 3 позиций в книге"/>
+					<node name="summaryOff" value="Не нужна возможность возврата по ссылкам"/>
+				</node>
+				<node name="backKeyAction" value="Действие по кнопке 'Назад'">
+					<node name="exit" value="Закрыть FBReader"/>
+					<node name="goBack" value="Вернуться по ссылке"/>
+					<node name="cancelMenu" value="Показать список действий"/>
+				</node>
+				<node name="backKeyLongPressAction" value="Действие по долгому нажатию">
+					<node name="exit" value="Закрыть FBReader"/>
+					<node name="goBack" value="Вернуться по ссылке"/>
+					<node name="cancelMenu" value="Показать список действий"/>
+					<node name="none" value="Ничего не делать"/>
+				</node>
+			</node>
 		</node>
 		<node name="OptionsDialog">
 			<node name="tab">
@@ -554,10 +600,6 @@
 			<node name="noRequiredInformation" value="Информация нет в каталоге" />
 			<node name="cacheDirectoryError" value="Не удается создать каталог для кэша" />
 		</node>
-		<node name="emptyCatalogBox">
-			<node name="title" value="Информация" />
-			<node name="message" value="Каталог пуст" />
-		</node>
 		<node name="emptySearchResults">
 			<node name="title" value="Результаты поиска" />
 			<node name="message" value="Подходящих книг не найдено" />
@@ -571,7 +613,7 @@
 			<node name="register" value="Зарегистрироваться" />
 		</node>
 		<node name="CustomCatalogDialog">
-			<node name="title" value="Пользовательский каталог" />
+			<node name="title" value="FBReader: добавление каталога" />
 			<node name="catalogTitle" value="Название" />
 			<node name="catalogUrl" value="URL" />
 			<node name="catalogSummary" value="Описание" />
@@ -605,6 +647,8 @@
 		<node name="dictionaryIsNotInstalled" value="Не удалось запустить словарь"/>
 		<node name="permissionDenied" value="Нет доступа к файлам" />
 		<node name="noFavorites" value="Вы пока не добавили ни одной книги в «Избранное»"/>
+		<node name="emptyCatalog" value="Каталог пуст"/>
+		<node name="emptyBasket" value="В корзине нет книг"/>
 	</node>
 	<node name="external">
 		<node name="browser" value="браузере"/>
