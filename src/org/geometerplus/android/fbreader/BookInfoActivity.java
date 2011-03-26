@@ -21,8 +21,7 @@ package org.geometerplus.android.fbreader;
 
 import java.io.File;
 import java.text.DateFormat;
-import java.util.Date;
-import java.util.HashSet;
+import java.util.*;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -149,7 +148,7 @@ public class BookInfoActivity extends Activity {
 	}
 
 	private void setupInfoPair(int id, String key, CharSequence value) {
-		LinearLayout layout = (LinearLayout)findViewById(id);
+		final LinearLayout layout = (LinearLayout)findViewById(id);
 		if (value == null || value.length() == 0) {
 			layout.setVisibility(View.GONE);
 			return;
@@ -212,11 +211,18 @@ public class BookInfoActivity extends Activity {
 		}
 		setupInfoPair(R.id.book_authors, "authors", buffer);
 
-		SeriesInfo series = book.getSeriesInfo();
+		final SeriesInfo series = book.getSeriesInfo();
 		setupInfoPair(R.id.book_series, "series",
 				(series == null) ? null : series.Name);
-		setupInfoPair(R.id.book_series_index, "indexInSeries",
-				(series == null || series.Index <= 0) ? null : String.valueOf(series.Index));
+		String seriesIndexString = null;
+		if (series != null && series.Index > 0) {
+			if (Math.abs(series.Index - Math.round(series.Index)) < 0.01) {
+				seriesIndexString = String.valueOf(Math.round(series.Index));
+			} else {
+				seriesIndexString = String.format("%.1f", series.Index);
+			}
+		}
+		setupInfoPair(R.id.book_series_index, "indexInSeries", seriesIndexString);
 
 		buffer.delete(0, buffer.length());
 		final HashSet<String> tagNames = new HashSet<String>();

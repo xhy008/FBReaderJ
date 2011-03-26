@@ -20,11 +20,13 @@
 package org.geometerplus.android.fbreader;
 
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Menu;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
@@ -71,7 +73,7 @@ public final class FBReader extends ZLAndroidActivity {
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
-		final ZLAndroidApplication application = ZLAndroidApplication.Instance();
+		final ZLAndroidApplication application = (ZLAndroidApplication)getApplication();
 		myFullScreenFlag =
 			application.ShowStatusBarOption.getValue() ? 0 : WindowManager.LayoutParams.FLAG_FULLSCREEN;
 		getWindow().setFlags(
@@ -89,7 +91,7 @@ public final class FBReader extends ZLAndroidActivity {
 		fbReader.addAction(ActionCode.SHOW_LIBRARY, new ShowLibraryAction(this, fbReader));
 		fbReader.addAction(ActionCode.SHOW_PREFERENCES, new ShowPreferencesAction(this, fbReader));
 		fbReader.addAction(ActionCode.SHOW_BOOK_INFO, new ShowBookInfoAction(this, fbReader));
-		fbReader.addAction(ActionCode.SHOW_CONTENTS, new ShowTOCAction(this, fbReader));
+		fbReader.addAction(ActionCode.SHOW_TOC, new ShowTOCAction(this, fbReader));
 		fbReader.addAction(ActionCode.SHOW_BOOKMARKS, new ShowBookmarksAction(this, fbReader));
 		fbReader.addAction(ActionCode.SHOW_NETWORK_LIBRARY, new ShowNetworkLibraryAction(this, fbReader));
 		
@@ -99,13 +101,33 @@ public final class FBReader extends ZLAndroidActivity {
 
 		fbReader.addAction(ActionCode.PROCESS_HYPERLINK, new ProcessHyperlinkAction(this, fbReader));
 
-		fbReader.addAction(ActionCode.CANCEL, new CancelAction(this, fbReader));
+		fbReader.addAction(ActionCode.SHOW_CANCEL_MENU, new ShowCancelMenuAction(this, fbReader));
+	}
+
+ 	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		final ZLAndroidApplication application = (ZLAndroidApplication)getApplication();
+		if (!application.ShowStatusBarOption.getValue() &&
+			application.ShowStatusBarWhenMenuIsActiveOption.getValue()) {
+			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+		}
+		return super.onPrepareOptionsMenu(menu);
+	}
+
+	@Override
+	public void onOptionsMenuClosed(Menu menu) {
+		super.onOptionsMenuClosed(menu);
+		final ZLAndroidApplication application = (ZLAndroidApplication)getApplication();
+		if (!application.ShowStatusBarOption.getValue() &&
+			application.ShowStatusBarWhenMenuIsActiveOption.getValue()) {
+			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+		}
 	}
 
 	@Override
 	protected void onNewIntent(Intent intent) {
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-	   		final String pattern = intent.getStringExtra(SearchManager.QUERY);
+			final String pattern = intent.getStringExtra(SearchManager.QUERY);
 			final Handler successHandler = new Handler() {
 				public void handleMessage(Message message) {
 					ourTextSearchPanel.show(true);
@@ -130,6 +152,7 @@ public final class FBReader extends ZLAndroidActivity {
 				}
 			};
 			UIUtil.wait("search", runnable, this);
+			startActivity(new Intent(this, getClass()));
 		} else {
 			super.onNewIntent(intent);
 		}
@@ -138,7 +161,7 @@ public final class FBReader extends ZLAndroidActivity {
 	@Override
 	public void onStart() {
 		super.onStart();
-		final ZLAndroidApplication application = ZLAndroidApplication.Instance();
+		final ZLAndroidApplication application = (ZLAndroidApplication)getApplication();
 
 		final int fullScreenFlag =
 			application.ShowStatusBarOption.getValue() ? 0 : WindowManager.LayoutParams.FLAG_FULLSCREEN;
@@ -228,5 +251,36 @@ public final class FBReader extends ZLAndroidActivity {
 
 	public void navigate() {
 		ourNavigatePanel.runNavigation();
+	}
+
+	private void addMenuItem(Menu menu, String actionId, int iconId) {
+		final ZLAndroidApplication application = (ZLAndroidApplication)getApplication();
+		application.myMainWindow.addMenuItem(menu, actionId, iconId);
+	}
+
+	private void addMenuItem(Menu menu, String actionId) {
+		final ZLAndroidApplication application = (ZLAndroidApplication)getApplication();
+		application.myMainWindow.addMenuItem(menu, actionId, null);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		final ZLAndroidApplication application = (ZLAndroidApplication)getApplication();
+		addMenuItem(menu, ActionCode.SHOW_LIBRARY, R.drawable.ic_menu_library);
+		addMenuItem(menu, ActionCode.SHOW_NETWORK_LIBRARY, R.drawable.ic_menu_networklibrary);
+		addMenuItem(menu, ActionCode.SHOW_TOC, R.drawable.ic_menu_toc);
+		addMenuItem(menu, ActionCode.SHOW_BOOKMARKS, R.drawable.ic_menu_bookmarks);
+		addMenuItem(menu, ActionCode.SWITCH_TO_NIGHT_PROFILE, R.drawable.ic_menu_night);
+		addMenuItem(menu, ActionCode.SWITCH_TO_DAY_PROFILE, R.drawable.ic_menu_day);
+		addMenuItem(menu, ActionCode.SEARCH, R.drawable.ic_menu_search);
+		addMenuItem(menu, ActionCode.SHOW_PREFERENCES);
+		addMenuItem(menu, ActionCode.SHOW_BOOK_INFO);
+		addMenuItem(menu, ActionCode.ROTATE);
+		addMenuItem(menu, ActionCode.INCREASE_FONT);
+		addMenuItem(menu, ActionCode.DECREASE_FONT);
+		addMenuItem(menu, ActionCode.SHOW_NAVIGATION);
+
+		return true;
 	}
 }
