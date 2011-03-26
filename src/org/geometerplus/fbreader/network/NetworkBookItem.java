@@ -25,7 +25,7 @@ import java.io.File;
 import org.geometerplus.fbreader.network.authentication.NetworkAuthenticationManager;
 
 
-public final class NetworkBookItem extends NetworkLibraryItem {
+public final class NetworkBookItem extends NetworkItem {
 
 	public static class AuthorData implements Comparable<AuthorData> {
 		public final String DisplayName;
@@ -35,11 +35,11 @@ public final class NetworkBookItem extends NetworkLibraryItem {
 		 * Creates new AuthorData instance. 
 		 *
 		 * @param displayName author's name. Must be not <code>null</code>.
-		 * @param sortKey     string that defines sorting order of book's authors. Must be not <code>null</code>.
+		 * @param sortKey     string that defines sorting order of book's authors.
 		 */
 		public AuthorData(String displayName, String sortKey) {
 			DisplayName = displayName.intern();
-			SortKey = sortKey.intern();
+			SortKey = sortKey != null ? sortKey.intern() : DisplayName.toLowerCase().intern();
 		}
 
 		public int compareTo(AuthorData data) {
@@ -59,7 +59,7 @@ public final class NetworkBookItem extends NetworkLibraryItem {
 				return false;
 			}
 			final AuthorData data = (AuthorData) o;
-			return SortKey == data.SortKey && DisplayName == data.DisplayName;
+			return SortKey.equals(data.SortKey) && DisplayName.equals(data.DisplayName);
 		}
 
 		@Override
@@ -75,12 +75,12 @@ public final class NetworkBookItem extends NetworkLibraryItem {
 	public final LinkedList<AuthorData> Authors;
 	public final LinkedList<String> Tags;
 	public final String SeriesTitle;
-	public final int IndexInSeries;
+	public final float IndexInSeries;
 
 	private final LinkedList<BookReference> myReferences;
 
 	/**
-	 * Creates new NetworkLibraryItem instance.
+	 * Creates new NetworkItem instance.
 	 *
 	 * @param link          corresponding NetworkLink object. Must be not <code>null</code>.
 	 * @param id            string that uniquely identifies this book item. Must be not <code>null</code>.
@@ -98,7 +98,7 @@ public final class NetworkBookItem extends NetworkLibraryItem {
 	 */
 	public NetworkBookItem(INetworkLink link, String id, int index,
 		String title, String summary, /*String language, String date,*/
-		List<AuthorData> authors, List<String> tags, String seriesTitle, int indexInSeries,
+		List<AuthorData> authors, List<String> tags, String seriesTitle, float indexInSeries,
 		String cover,
 		List<BookReference> references) {
 		super(link, title, summary, cover);

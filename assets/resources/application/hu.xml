@@ -47,6 +47,18 @@
 		<node name="removeFromFavorites" value="Eltávolítás a kedvencek közül"/>
 	</node>
 	<node name="networkView">
+		<node name="byAuthor" value="Szerzők">
+			<node name="summary" value="Könyvek szerzők szerint"/>
+		</node>
+		<node name="byTitle" value="By title" toBeTranslated="true">
+			<node name="summary" value="Books sorted by title" toBeTranslated="true"/>
+		</node>
+		<node name="byDate" value="By date" toBeTranslated="true">
+			<node name="summary" value="Books sorted by date of purchasing" toBeTranslated="true"/>
+		</node>
+		<node name="bySeries" value="By series" toBeTranslated="true">
+			<node name="summary" value="Books sorted by series" toBeTranslated="true"/>
+		</node>
 		<node name="openCatalog" value="Katalógus megnyitása"/>
 		<node name="showResults" value="Eredmények"/>
 		<node name="showBooks" value="Könyvek"/>
@@ -57,16 +69,20 @@
 		<node name="deleteDemo" value="Minta törlése"/>
 		<node name="downloadDemo" value="Minta letöltése"/>
 		<node name="buy" value="Vásárlás (%s)"/>
+		<node name="addToBasket" value="Add to basket" toBeTranslated="true"/>
+		<node name="removeFromBasket" value="Remove from basket" toBeTranslated="true"/>
 		<node name="openInBrowser" value="Megnyitás böngészőben" />
 		<node name="stopLoading" value="Letöltés leállítása" />
 		<node name="stopSearching" value="Keresés leállítása" />
 		<node name="signIn" value="Bejelentkezés"/>
 		<node name="signOut" value="Kijelentkezés (%s)"/>
-		<node name="refillAccount" value="Számla feltöltése (Jelenleg: %s)"/>
-		<node name="refillTitle" value="Számla feltöltése"/>
-		<node name="refillViaSms" value="SMS üzenetek"/>
-		<node name="refillViaBrowser" value="Oldal megnyitása böngészőben"/>
-		<node name="refillSummary" value="Jelenleg: %s"/>
+		<node name="topup" value="Számla feltöltése (Jelenleg: %s)"/>
+		<node name="topupTitle" value="Számla feltöltése"/>
+		<node name="topupViaCreditCard" value="Credit card" toBeTranslated="true"/>
+		<node name="topupViaSelfServiceKiosk" value="Self-service kiosk" toBeTranslated="true"/>
+		<node name="topupViaSms" value="SMS üzenetek"/>
+		<node name="topupViaBrowser" value="Oldal megnyitása böngészőben"/>
+		<node name="topupSummary" value="Jelenleg: %s"/>
 		<node name="alreadyDownloading" value="Könyv letöltése folyamatban" />
 		<node name="alreadyDownloadingDemo" value="Minta letöltése folyamatban" />
 		<node name="stoppingCatalogLoading" value="Letöltés leállítása" />
@@ -94,7 +110,7 @@
 			<node name="signIn" value="Bejelentkezés"/>
 			<node name="signOut" value="Kijelentkezés (%s)"/>
 			<node name="signUp" value="Regisztráció" />
-			<node name="refillAccount" value="Számla feltöltése"/>
+			<node name="topup" value="Számla feltöltése"/>
 			<node name="addCustomCatalog" value="Katalógus hozzáadása"/>
 			<node name="refreshCatalogsList" value="Katalógusok frissítése"/>
 			<node name="languages" value="Nyelvi szűrő"/>
@@ -109,6 +125,7 @@
 		<node name="series" value="Sorozat:" />
 		<node name="indexInSeries" value="Sorszám:" />
 		<node name="tags" value="Címkék:" />
+		<node name="catalog" value="Catalog:" toBeTranslated="true"/>
 	</node>
 	<node name="bookInfo">
 		<node name="bookInfo" value="Könyv adatai" />
@@ -160,6 +177,8 @@
 	<node name="cancelMenu">
 		<node name="previousBook" value="Open previous book" toBeTranslated="true"/>
 		<node name="returnTo" value="Return to ..." toBeTranslated="true"/>
+		<node name="back" value="Back" toBeTranslated="true"/>
+		<node name="forward" value="Forward" toBeTranslated="true"/>
 		<node name="close" value="Close FBReader" toBeTranslated="true"/>
 	</node>
 	<node name="menu">
@@ -206,7 +225,7 @@
 			<node name="openBook" value="Olvasás" />
 			<node name="editInfo" value="Szerkesztés" />
 			<node name="reloadInfo" value="Újratölt" />
-			<node name="refillAccount" value="Számla feltöltése"/>
+			<node name="topup" value="Számla feltöltése"/>
 		</node>
 		<node name="plugin">
 			<node name="installTitle" value="Plugin telepítése" />
@@ -407,6 +426,7 @@
 				<node name="selectionBackground" value="Kijelölés háttere"/>
 				<node name="text" value="Szöveg"/>
 				<node name="hyperlink" value="Hiperhivatkozás"/>
+				<node name="hyperlinkVisited" value="Visited hyperlink text" toBeTranslated="true"/>
 				<node name="highlighting" value="Találatok kiemelése"/>
 				<node name="footer" value="Lábléc"/>
 			</node>
@@ -512,6 +532,28 @@
 					<node name="summaryOff" value="A gombnyomásos navigáció linkről linkre ugrik"/>
 				</node>
 			</node>
+			<node name="cancelMenu" value="Cancel menu" toBeTranslated="true">
+				<node name="summary" value="Back button action list" toBeTranslated="true"/>
+				<node name="previousBook" value="Previous book" toBeTranslated="true">
+					<node name="summaryOn" value="Show 'return to previous book' item" toBeTranslated="true"/>
+					<node name="summaryOff" value="Don't show 'return to previous book' item" toBeTranslated="true"/>
+				</node>
+				<node name="positions" value="Last 3 positions" toBeTranslated="true">
+					<node name="summaryOn" value="Show items for last 3 positions in the book" toBeTranslated="true"/>
+					<node name="summaryOff" value="Don't show items for last 3 positions in the book" toBeTranslated="true"/>
+				</node>
+				<node name="backKeyAction" value="Back key action" toBeTranslated="true">
+					<node name="exit" value="Close FBReader" toBeTranslated="true"/>
+					<node name="goBack" value="Navigate back" toBeTranslated="true"/>
+					<node name="cancelMenu" value="Show cancel menu" toBeTranslated="true"/>
+				</node>
+				<node name="backKeyLongPressAction" value="Back key long press action" toBeTranslated="true">
+					<node name="exit" value="Close FBReader" toBeTranslated="true"/>
+					<node name="goBack" value="Navigate back" toBeTranslated="true"/>
+					<node name="cancelMenu" value="Show cancel menu" toBeTranslated="true"/>
+					<node name="none" value="No action" toBeTranslated="true"/>
+				</node>
+			</node>
 		</node>
 		<node name="OptionsDialog">
 			<node name="tab">
@@ -558,10 +600,6 @@
 			<node name="notAnOPDS" value="Ez nem OPSD formátumú katalógus" />
 			<node name="noRequiredInformation" value="Szükséges információ nincs megadva a katalógusban" />
 			<node name="cacheDirectoryError" value="Gyorsítótár létrehozása sikertelen" />
-		</node>
-		<node name="emptyCatalogBox">
-			<node name="title" value="Információ" />
-			<node name="message" value="A katalógus üres" />
 		</node>
 		<node name="emptySearchResults">
 			<node name="title" value="Eredmények" />
@@ -610,6 +648,8 @@
 		<node name="dictionaryIsNotInstalled" value="Sajnos nincs telepítve szótár"/>
 		<node name="permissionDenied" value="Sanos nem engedélyezett"/>
 		<node name="noFavorites" value="A Kedvencek listája üres"/>
+		<node name="emptyCatalog" value="A katalógus üres"/>
+		<node name="emptyBasket" value="Your basket is empty, sorry" toBeTranslated="true"/>
 	</node>
 	<node name="external">
 		<node name="browser" value="Böngésző"/>

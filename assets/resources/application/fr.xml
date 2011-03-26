@@ -50,6 +50,18 @@
 		<node name="removeFromFavorites" value="Supprimer des favoris"/>
 	</node>
 	<node name="networkView">
+		<node name="byAuthor" value="Par auteur">
+			<node name="summary" value="Livres triés par auteur"/>
+		</node>
+		<node name="byTitle" value="By title" toBeTranslated="true">
+			<node name="summary" value="Books sorted by title" toBeTranslated="true"/>
+		</node>
+		<node name="byDate" value="By date" toBeTranslated="true">
+			<node name="summary" value="Books sorted by date of purchasing" toBeTranslated="true"/>
+		</node>
+		<node name="bySeries" value="By series" toBeTranslated="true">
+			<node name="summary" value="Books sorted by series" toBeTranslated="true"/>
+		</node>
 		<node name="openCatalog" value="Ouvrir le catalogue"/>
 		<node name="showResults" value="Afficher les résultats"/>
 		<node name="showBooks" value="Afficher les livres"/>
@@ -60,16 +72,20 @@
 		<node name="deleteDemo" value="Supprimer l'extrait"/>
 		<node name="downloadDemo" value="Télécharger l'extrait"/>
 		<node name="buy" value="Acheter (%s)"/>
+		<node name="addToBasket" value="Add to basket" toBeTranslated="true"/>
+		<node name="removeFromBasket" value="Remove from basket" toBeTranslated="true"/>
 		<node name="openInBrowser" value="Ouvrir dans un navigateur" />
 		<node name="stopLoading" value="Arrêt du chargement" />
 		<node name="stopSearching" value="Arrêt de la recherche" />
 		<node name="signIn" value="Connexion"/>
 		<node name="signOut" value="Déconnexion (%s)"/>
-		<node name="refillAccount" value="Recréditer le compte (actuellement : %s)"/>
-		<node name="refillTitle" value="Recréditer le compte"/>
-		<node name="refillViaSms" value="Messages texte"/>
-		<node name="refillViaBrowser" value="Ouvrir la page dans le navigateur"/>
-		<node name="refillSummary" value="Аctuellement : %s"/>
+		<node name="topup" value="Recréditer le compte (actuellement : %s)"/>
+		<node name="topupTitle" value="Recréditer le compte"/>
+		<node name="topupViaCreditCard" value="Credit card" toBeTranslated="true"/>
+		<node name="topupViaSelfServiceKiosk" value="Self-service kiosk" toBeTranslated="true"/>
+		<node name="topupViaSms" value="Messages texte"/>
+		<node name="topupViaBrowser" value="Ouvrir la page dans le navigateur"/>
+		<node name="topupSummary" value="Аctuellement : %s"/>
 		<node name="alreadyDownloading" value="Le livre est en cours de téléchargement" />
 		<node name="alreadyDownloadingDemo" value="L'exemple est en cours de téléchargement" />
 		<node name="stoppingCatalogLoading" value="Arrêt du chargement" />
@@ -97,7 +113,7 @@
 			<node name="signIn" value="Connexion"/>
 			<node name="signOut" value="Déconnexion (%s)"/>
 			<node name="signUp" value="Inscription"/>
-			<node name="refillAccount" value="Recréditer le compte"/>
+			<node name="topup" value="Recréditer le compte"/>
 			<node name="addCustomCatalog" value="Ajouter catalogue"/>
 			<node name="refreshCatalogsList" value="Rafraîchir"/>
 			<node name="languages" value="Filtrer par langue"/>
@@ -112,6 +128,7 @@
 		<node name="series" value="Série:" />
 		<node name="indexInSeries" value="Index dans les séries:" />
 		<node name="tags" value="Tags:" />
+		<node name="catalog" value="Catalog:" toBeTranslated="true"/>
 	</node>
 	<node name="bookInfo">
 		<node name="bookInfo" value="Informations sur le livre" />
@@ -163,6 +180,8 @@
 	<node name="cancelMenu">
 		<node name="previousBook" value="Open previous book" toBeTranslated="true"/>
 		<node name="returnTo" value="Return to ..." toBeTranslated="true"/>
+		<node name="back" value="Back" toBeTranslated="true"/>
+		<node name="forward" value="Forward" toBeTranslated="true"/>
 		<node name="close" value="Close FBReader" toBeTranslated="true"/>
 	</node>
 	<node name="menu">
@@ -209,7 +228,7 @@
 			<node name="openBook" value="Lire" />
 			<node name="editInfo" value="Modifier" />
 			<node name="reloadInfo" value="Recharger" />
-			<node name="refillAccount" value="Recréditer"/>
+			<node name="topup" value="Recréditer"/>
 		</node>
 		<node name="plugin">
 			<node name="installTitle" value="Installer plugin" />
@@ -410,6 +429,7 @@
 				<node name="selectionBackground" value="Arrière-plan de sélection"/>
 				<node name="text" value="Texte normal"/>
 				<node name="hyperlink" value="Text d'hyperlien"/>
+				<node name="hyperlinkVisited" value="Visited hyperlink text" toBeTranslated="true"/>
 				<node name="highlighting" value="Arrière-plan des résultats de recherche"/>
 				<node name="footer" value="Pied de page"/>
 			</node>
@@ -515,6 +535,28 @@
 					<node name="summaryOff" value="La navigation par touches visite les liens hypertexts uniquement"/>
 				</node>
 			</node>
+			<node name="cancelMenu" value="Cancel menu" toBeTranslated="true">
+				<node name="summary" value="Back button action list" toBeTranslated="true"/>
+				<node name="previousBook" value="Previous book" toBeTranslated="true">
+					<node name="summaryOn" value="Show 'return to previous book' item" toBeTranslated="true"/>
+					<node name="summaryOff" value="Don't show 'return to previous book' item" toBeTranslated="true"/>
+				</node>
+				<node name="positions" value="Last 3 positions" toBeTranslated="true">
+					<node name="summaryOn" value="Show items for last 3 positions in the book" toBeTranslated="true"/>
+					<node name="summaryOff" value="Don't show items for last 3 positions in the book" toBeTranslated="true"/>
+				</node>
+				<node name="backKeyAction" value="Back key action" toBeTranslated="true">
+					<node name="exit" value="Close FBReader" toBeTranslated="true"/>
+					<node name="goBack" value="Navigate back" toBeTranslated="true"/>
+					<node name="cancelMenu" value="Show cancel menu" toBeTranslated="true"/>
+				</node>
+				<node name="backKeyLongPressAction" value="Back key long press action" toBeTranslated="true">
+					<node name="exit" value="Close FBReader" toBeTranslated="true"/>
+					<node name="goBack" value="Navigate back" toBeTranslated="true"/>
+					<node name="cancelMenu" value="Show cancel menu" toBeTranslated="true"/>
+					<node name="none" value="No action" toBeTranslated="true"/>
+				</node>
+			</node>
 		</node>
 		<node name="OptionsDialog">
 			<node name="tab">
@@ -561,10 +603,6 @@
 			<node name="notAnOPDS" value="Il ne s'agit pas d'un catalogue OPDS" />
 			<node name="noRequiredInformation" value="Certaines informations requises sont absentes du catalogue" />
 			<node name="cacheDirectoryError" value="Impossible de créer le répertoire contenant le cache" />
-		</node>
-		<node name="emptyCatalogBox">
-			<node name="title" value="Information"/>
-			<node name="message" value="Le catalogue est vide"/>
 		</node>
 		<node name="emptySearchResults">
 			<node name="title" value="Résultats de la recherche" />
@@ -613,6 +651,8 @@
 		<node name="dictionaryIsNotInstalled" value="Désolé mais le dictionnaire n'est pas installé"/>
 		<node name="permissionDenied" value="Désolé, accès refusé"/>
 		<node name="noFavorites" value="Votre liste de favoris est vide"/>
+		<node name="emptyCatalog" value="Le catalogue est vide"/>
+		<node name="emptyBasket" value="Your basket is empty, sorry" toBeTranslated="true"/>
 	</node>
 	<node name="external">
 		<node name="browser" value="Navigateur"/>

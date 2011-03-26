@@ -47,6 +47,18 @@
 		<node name="removeFromFavorites" value="ลบจากหนังสือเล่มโปรด"/>
 	</node>
 	<node name="networkView">
+		<node name="byAuthor" value="ชื่อผู้แต่ง ">
+			<node name="summary" value="เรียงตามชื่อผู้แต่ง"/>
+		</node>
+		<node name="byTitle" value="ชื่อหนังสือ">
+			<node name="summary" value="เรียงตามชื่อหนังสือ"/>
+		</node>
+		<node name="byDate" value="By date" toBeTranslated="true">
+			<node name="summary" value="Books sorted by date of purchasing" toBeTranslated="true"/>
+		</node>
+		<node name="bySeries" value="By series" toBeTranslated="true">
+			<node name="summary" value="Books sorted by series" toBeTranslated="true"/>
+		</node>
 		<node name="openCatalog" value="เปิดแคตตาล็อก"/>
 		<node name="showResults" value="แสดงผลการค้นหา"/>
 		<node name="showBooks" value="แสดงหนังสือ"/>
@@ -57,16 +69,20 @@
 		<node name="deleteDemo" value="ลบหนังสือตัวอย่าง"/>
 		<node name="downloadDemo" value="ดาวน์โหลดหนังสือตัวอย่าง"/>
 		<node name="buy" value="ซื้อ (%s)"/>
+		<node name="addToBasket" value="Add to basket" toBeTranslated="true"/>
+		<node name="removeFromBasket" value="Remove from basket" toBeTranslated="true"/>
 		<node name="openInBrowser" value="เปิดในเว็บบราวเซอร์"/>
 		<node name="stopLoading" value="หยุดการโหลด"/>
 		<node name="stopSearching" value="หยุดการค้นหา"/>
 		<node name="signIn" value="ลงชื่อเข้าระบบ"/>
 		<node name="signOut" value="ออกจากระบบ (%s)"/>
-		<node name="refillAccount" value="เติมเงินเข้าบัญชีผู้ใช้ (ปัจจุบันคือ: %s)"/>
-		<node name="refillTitle" value="เติมเงินเข้าบัญชี"/>
-		<node name="refillViaSms" value="ข้อความ"/>
-		<node name="refillViaBrowser" value="เปิดในเว็บเบราว์เซอร์"/>
-		<node name="refillSummary" value="ปัจจุบัน: %s"/>
+		<node name="topup" value="เติมเงินเข้าบัญชีผู้ใช้ (ปัจจุบันคือ: %s)"/>
+		<node name="topupTitle" value="เติมเงินเข้าบัญชี"/>
+		<node name="topupViaCreditCard" value="Credit card" toBeTranslated="true"/>
+		<node name="topupViaSelfServiceKiosk" value="Self-service kiosk" toBeTranslated="true"/>
+		<node name="topupViaSms" value="ข้อความ"/>
+		<node name="topupViaBrowser" value="เปิดในเว็บเบราว์เซอร์"/>
+		<node name="topupSummary" value="ปัจจุบัน: %s"/>
 		<node name="alreadyDownloading" value="กำลังดาวน์โหลดหนังสือ"/>
 		<node name="alreadyDownloadingDemo" value="กำลังดาวน์โหลดหนังสือตัวอย่าง"/>
 		<node name="stoppingCatalogLoading" value="หยุดการโหลด"/>
@@ -94,7 +110,7 @@
 			<node name="signIn" value="ลงชื่อเข้าระบบ"/>
 			<node name="signUp" value="ลงทะเบียนเข้าระบบ"/>
 			<node name="signOut" value="ออกจากระบบ (%s)"/>
-			<node name="refillAccount" value="เติมเงินเข้าบัญชี"/>
+			<node name="topup" value="เติมเงินเข้าบัญชี"/>
 			<node name="addCustomCatalog" value="เพิ่มแคตตาล็อก"/>
 			<node name="refreshCatalogsList" value="รีเฟรชแคตตาล็อก"/>
 			<node name="languages" value="ตัวกรองภาษา"/>
@@ -109,6 +125,7 @@
 		<node name="series" value="ชุดหนังสือ:"/>
 		<node name="indexInSeries" value="ดัชนีชุดหนังสือ:"/>
 		<node name="tags" value="แท็ก:"/>
+		<node name="catalog" value="Catalog:" toBeTranslated="true"/>
 	</node>
 	<node name="bookInfo">
 		<node name="bookInfo" value="ข้อมูลหนังสือ"/>
@@ -160,6 +177,8 @@
 	<node name="cancelMenu">
 		<node name="previousBook" value="เปิดหนังสือเล่มก่อนหน้า"/>
 		<node name="returnTo" value="กลับไป ..."/>
+		<node name="back" value="Back" toBeTranslated="true"/>
+		<node name="forward" value="Forward" toBeTranslated="true"/>
 		<node name="close" value="ปิด FBReader"/>
 	</node>
 	<node name="menu">
@@ -206,7 +225,7 @@
 			<node name="openBook" value="อ่าน"/>
 			<node name="editInfo" value="แก้ไข"/>
 			<node name="reloadInfo" value="โหลดใหม่"/>
-			<node name="refillAccount" value="เติมเงิน"/>
+			<node name="topup" value="เติมเงิน"/>
 		</node>
 		<node name="plugin">
 			<node name="installTitle" value="ติดตั้งปลั๊กอิน"/>
@@ -237,12 +256,12 @@
 					<node name="summaryOff" value="ไม่หมุนหน้าจอเมื่อหมุนตัวเครื่อง"/>
 				</node>
 				<node name="showStatusBar" value="แสดงแถบสถานะ">
-					<node name="summaryOn" value="แสดงแถบสถานะเมื่อแสดงเมนู"/>
-					<node name="summaryOff" value="ซ่อนแถบสถานะเมื่อแสดง"/>
+					<node name="summaryOn" value="แสดงแถบสถานะขณะอ่านหนังสือ"/>
+					<node name="summaryOff" value="ซ่อนแถบสถานะขณะอ่านหนังสือ"/>
 				</node>
-				<node name="showStatusBarWhenMenuIsActive" value="Show status bar when menu is active" toBeTranslated="true">
-					<node name="summaryOn" value="Show status bar when menu becomes active" toBeTranslated="true"/>
-					<node name="summaryOff" value="Don't show status bar when menu becomes active" toBeTranslated="true"/>
+				<node name="showStatusBarWhenMenuIsActive" value="แสดงแถบสถานะเมื่อแสดงเมนู">
+					<node name="summaryOn" value="แสดงแถบสถานะเมื่อแสดงเมนู" />
+					<node name="summaryOff" value="ไม่แสดงแถบสถานะเมื่อแสดงเมนู" />
 				</node>
 			</node>
 			<node name="text" value="ข้อความ">
@@ -407,6 +426,7 @@
 				<node name="selectionBackground" value="พื้นหลังที่เลือก"/>
 				<node name="text" value="ข้อความ"/>
 				<node name="hyperlink" value="ลิ้งค์ข้อความ"/>
+				<node name="hyperlinkVisited" value="Visited hyperlink text" toBeTranslated="true"/>
 				<node name="highlighting" value="สีไฮไลท์ผลการค้นหาคำ"/>
 				<node name="footer" value="ข้อความท้ายหน้า"/>
 			</node>
@@ -512,6 +532,28 @@
 					<node name="summaryOff" value="ตัวเลือกคำเลือกได้เฉพาะลิ้งค์ข้อความ"/>
 				</node>
 			</node>
+			<node name="cancelMenu" value="Cancel menu" toBeTranslated="true">
+				<node name="summary" value="Back button action list" toBeTranslated="true"/>
+				<node name="previousBook" value="Previous book" toBeTranslated="true">
+					<node name="summaryOn" value="Show 'return to previous book' item" toBeTranslated="true"/>
+					<node name="summaryOff" value="Don't show 'return to previous book' item" toBeTranslated="true"/>
+				</node>
+				<node name="positions" value="Last 3 positions" toBeTranslated="true">
+					<node name="summaryOn" value="Show items for last 3 positions in the book" toBeTranslated="true"/>
+					<node name="summaryOff" value="Don't show items for last 3 positions in the book" toBeTranslated="true"/>
+				</node>
+				<node name="backKeyAction" value="Back key action" toBeTranslated="true">
+					<node name="exit" value="Close FBReader" toBeTranslated="true"/>
+					<node name="goBack" value="Navigate back" toBeTranslated="true"/>
+					<node name="cancelMenu" value="Show cancel menu" toBeTranslated="true"/>
+				</node>
+				<node name="backKeyLongPressAction" value="Back key long press action" toBeTranslated="true">
+					<node name="exit" value="Close FBReader" toBeTranslated="true"/>
+					<node name="goBack" value="Navigate back" toBeTranslated="true"/>
+					<node name="cancelMenu" value="Show cancel menu" toBeTranslated="true"/>
+					<node name="none" value="No action" toBeTranslated="true"/>
+				</node>
+			</node>
 		</node>
 		<node name="OptionsDialog">
 			<node name="tab">
@@ -558,10 +600,6 @@
 			<node name="notAnOPDS" value="ไม่ใช่ OPDS แคตตาล็อก"/>
 			<node name="noRequiredInformation" value="ข้อมูลที่ต้องการไม่ได้ระบุในแคตตาล็อก"/>
 			<node name="cacheDirectoryError" value="ไม่สามารถสร้างแคชสำหรับไดเรคทอรี"/>
-		</node>
-		<node name="emptyCatalogBox">
-			<node name="title" value="ข้อมูล"/>
-			<node name="message" value="แคตตาล็อกไม่มีข้อมูล"/>
 		</node>
 		<node name="emptySearchResults">
 			<node name="title" value="ผลการค้นหา"/>
@@ -610,6 +648,8 @@
 		<node name="dictionaryIsNotInstalled" value="ขออภัย, พจนานุกรมไม่ได้รับการติดตั้ง"/>
 		<node name="permissionDenied" value="ขออภัย, ไม่ได้รับการอนุญาต"/>
 		<node name="noFavorites" value="ขออภัย, ไม่มีข้อมูลในรายการโปรดของคุณ"/>
+		<node name="emptyCatalog" value="แคตตาล็อกไม่มีข้อมูล"/>
+		<node name="emptyBasket" value="Your basket is empty, sorry" toBeTranslated="true"/>
 	</node>
 	<node name="external">
 		<node name="browser" value="เว็บเบราว์เซอร์"/>
