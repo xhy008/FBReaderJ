@@ -1,18 +1,33 @@
+DONE show 'empty basket' message without opening of catalog
+* update basket view if basket content is changed
+* basket summary
+DONE show recommendation item if basket is not empty
+* new actions in main menu: clear; buy all
+* update recommendations list after each basket updating/purchasing
+* update recommendations list visibility after each basket updating/purchasing
+* remove book from basket on purchasing
+
+* search item behaviour like search item in local library
+* separate search for each catalog (if search URL is presented)
+* menu search button should be available for all catalog levels
+
+* float point numbers as series index
+* replace AuthenticationCatalog by AuthenticationActivity
+* 'recently visited catalogs' item
+* load search URL for catalogs from these catalogs, not from our generic file
+DONE show library name in network book activity
+
+* litres: credit card top up
+* litres: terminal (?) top up
+* litres: similar books link
+
+------------------------------
 
 NP: оповещение об изменениях в namespace'ах происходит после того,
     как был обработан тег, объявляющий эти namespace'ы... Нужно сделать:
     1) вызов namespaceMapChangedHandler перед вызовом startElementHandler
     2) вызов namespaceMapChangedHandler после вызова endElementHandler
     3) вызов namespaceMapChangedHandler для пустых тегов <tagname />
-
-DONE Network library: Объединять книги по сериям
-	** в сериях книги нужно сортировать по индексу
-		NP: а где это происходит???
-
-DONE Возможность открывать локальные файлы из всяких файл-менеджеров
-DONE На этой странице есть ссылка на epub-файл "для ПК". http://www.zone4iphone.ru/index.php?p_id=7&b_id=18413
-     Проверить скачивание книги браузером и возможность чтения из папки, куда файл был скачан.
-	DONE добавлять в библиотеку (сделать таблицу добавленных вручную книг)
 
 ------------------------------
 
@@ -47,4 +62,8 @@ DELAYED что делать, когда мало памяти???
 
 -----------------------------
 
+<<<<<<< HEAD
+=======
+другое:
+>>>>>>> master
 * поддержка hufdic в mobipocket
