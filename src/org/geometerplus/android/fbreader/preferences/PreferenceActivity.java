@@ -21,6 +21,7 @@ package org.geometerplus.android.fbreader.preferences;
 
 import android.content.Intent;
 
+import org.geometerplus.zlibrary.core.application.ZLKeyBindings;
 import org.geometerplus.zlibrary.core.options.ZLIntegerOption;
 import org.geometerplus.zlibrary.core.options.ZLIntegerRangeOption;
 
@@ -51,9 +52,27 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 		}
 		directoriesScreen.addOption(Paths.WallpapersDirectoryOption(), "wallpapers");
 
+		final ZLPreferenceSet statusBarPreferences = new ZLPreferenceSet();
 		final Screen appearanceScreen = createPreferenceScreen("appearance");
 		appearanceScreen.addOption(androidApp.AutoOrientationOption, "autoOrientation");
-		appearanceScreen.addOption(androidApp.ShowStatusBarOption, "showStatusBar");
+		appearanceScreen.addPreference(
+			new ZLBooleanPreference(
+				this, androidApp.ShowStatusBarOption, appearanceScreen.Resource, "showStatusBar"
+			) {
+				@Override
+				public void onClick() {
+					super.onClick();
+					statusBarPreferences.setEnabled(!isChecked());
+				}
+			}
+		);
+		statusBarPreferences.add(
+			appearanceScreen.addOption(
+				androidApp.ShowStatusBarWhenMenuIsActiveOption,
+				"showStatusBarWhenMenuIsActive"
+			)
+		);
+		statusBarPreferences.setEnabled(!androidApp.ShowStatusBarOption.getValue());
 
 		final Screen textScreen = createPreferenceScreen("text");
 		final ZLTextStyleCollection collection = ZLTextStyleCollection.Instance();
@@ -221,6 +240,7 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 		colorsScreen.addOption(profile.HighlightingOption, "highlighting");
 		colorsScreen.addOption(profile.RegularTextOption, "text");
 		colorsScreen.addOption(profile.HyperlinkTextOption, "hyperlink");
+		colorsScreen.addOption(profile.VisitedHyperlinkTextOption, "hyperlinkVisited");
 		colorsScreen.addOption(profile.FooterFillOption, "footer");
 
 		final Screen marginsScreen = createPreferenceScreen("margins");
@@ -324,8 +344,12 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 		}
 		*/
 
-		final Screen scrollingScreen = createPreferenceScreen("scrolling");
 		final ScrollingPreferences scrollingPreferences = ScrollingPreferences.Instance();
+
+		//final Screen tapZonesScreen = createPreferenceScreen("tapZones");
+		//tapZonesScreen.addOption(scrollingPreferences.TapZonesSchemeOption, "tapZonesScheme");
+
+		final Screen scrollingScreen = createPreferenceScreen("scrolling");
 		scrollingScreen.addOption(scrollingPreferences.FingerScrollingOption, "fingerScrolling");
 		scrollingScreen.addOption(fbReader.EnableDoubleTapOption, "enableDoubleTapDetection");
 
@@ -360,5 +384,24 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 			"navigateOverAllWords"
 		));
 		dictionaryScreen.addOption(fbReader.DictionaryTappingActionOption, "tappingAction");
+
+		final Screen cancelMenuScreen = createPreferenceScreen("cancelMenu");
+		cancelMenuScreen.addOption(fbReader.ShowPreviousBookInCancelMenuOption, "previousBook");
+		cancelMenuScreen.addOption(fbReader.ShowPositionsInCancelMenuOption, "positions");
+		final ZLKeyBindings bindings = fbReader.keyBindings();
+		final String[] backKeyActions =
+			//{ ActionCode.EXIT, ActionCode.GO_BACK, ActionCode.SHOW_CANCEL_MENU };
+			{ ActionCode.EXIT, ActionCode.SHOW_CANCEL_MENU };
+		cancelMenuScreen.addPreference(new ZLStringChoicePreference(
+			this, cancelMenuScreen.Resource, "backKeyAction",
+			bindings.getOption("<Back>", false), backKeyActions
+		));
+		final String[] backKeyLongPressActions =
+			//{ ActionCode.EXIT, ActionCode.GO_BACK, ActionCode.SHOW_CANCEL_MENU, FBReaderApp.NoAction };
+			{ ActionCode.EXIT, ActionCode.SHOW_CANCEL_MENU, FBReaderApp.NoAction };
+		cancelMenuScreen.addPreference(new ZLStringChoicePreference(
+			this, cancelMenuScreen.Resource, "backKeyLongPressAction",
+			bindings.getOption("<Back>", true), backKeyLongPressActions
+		));
 	}
 }

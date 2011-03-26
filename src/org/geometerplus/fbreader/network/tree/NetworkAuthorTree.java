@@ -32,7 +32,7 @@ public class NetworkAuthorTree extends NetworkTree {
 	private int myBooksNumber;
 	private HashMap<String, Integer> mySeriesMap;
 
-	public NetworkAuthorTree(NetworkTree parent, NetworkBookItem.AuthorData author) {
+	NetworkAuthorTree(NetworkTree parent, NetworkBookItem.AuthorData author) {
 		super(parent);
 		Author = author;
 	}
@@ -120,7 +120,12 @@ public class NetworkAuthorTree extends NetworkTree {
 	}
 
 	@Override
-	public NetworkLibraryItem getHoldedItem() {
+	public NetworkItem getHoldedItem() {
 		return null;
+	}
+
+	@Override
+	protected String getStringId() {
+		return "@Author:" + Author.DisplayName + ":" + Author.SortKey;
 	}
 }

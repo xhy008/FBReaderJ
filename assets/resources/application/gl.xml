@@ -47,6 +47,18 @@
 		<node name="removeFromFavorites" value="Retirar de preferidos"/>
 	</node>
 	<node name="networkView">
+		<node name="byAuthor" value="Por autor">
+			<node name="summary" value="Libros ordenados por autor"/>
+		</node>
+		<node name="byTitle" value="Por título">
+			<node name="summary" value="Libros ordenados por título"/>
+		</node>
+		<node name="byDate" value="By date" toBeTranslated="true">
+			<node name="summary" value="Books sorted by date of purchasing" toBeTranslated="true"/>
+		</node>
+		<node name="bySeries" value="By series" toBeTranslated="true">
+			<node name="summary" value="Books sorted by series" toBeTranslated="true"/>
+		</node>
 		<node name="openCatalog" value="Abrir o catalogo"/>
 		<node name="showResults" value="Mostrar resultados"/>
 		<node name="showBooks" value="Mostrar libros"/>
@@ -57,16 +69,20 @@
 		<node name="deleteDemo" value="Eliminar mostra"/>
 		<node name="downloadDemo" value="Descargar mostra"/>
 		<node name="buy" value="Comprar (%s)"/>
+		<node name="addToBasket" value="Add to basket" toBeTranslated="true"/>
+		<node name="removeFromBasket" value="Remove from basket" toBeTranslated="true"/>
 		<node name="openInBrowser" value="Abrir no navegador" />
 		<node name="stopLoading" value="Deter a carga" />
 		<node name="stopSearching" value="Deter a busca" />
 		<node name="signIn" value="Acceder"/>
 		<node name="signOut" value="Saír (%s)"/>
-		<node name="refillAccount" value="Actualizar a conta (actualmente: %s)"/>
-		<node name="refillTitle" value="Actualizar a conta"/>
-		<node name="refillViaSms" value="Mensaxes de texto"/>
-		<node name="refillViaBrowser" value="Abrir a páxina no navegador"/>
-		<node name="refillSummary" value="Actualmente: %s"/>
+		<node name="topup" value="Actualizar a conta (actualmente: %s)"/>
+		<node name="topupTitle" value="Actualizar a conta"/>
+		<node name="topupViaCreditCard" value="Credit card" toBeTranslated="true"/>
+		<node name="topupViaSelfServiceKiosk" value="Self-service kiosk" toBeTranslated="true"/>
+		<node name="topupViaSms" value="Mensaxes de texto"/>
+		<node name="topupViaBrowser" value="Abrir a páxina no navegador"/>
+		<node name="topupSummary" value="Actualmente: %s"/>
 		<node name="alreadyDownloading" value="O libro está a ser descargado" />
 		<node name="alreadyDownloadingDemo" value="A mostra está a ser descargada" />
 		<node name="stoppingCatalogLoading" value="Detendo a carga" />
@@ -94,7 +110,7 @@
 			<node name="signIn" value="Acceder"/>
 			<node name="signUp" value="Rexistrarse"/>
 			<node name="signOut" value="Saír (%s)"/>
-			<node name="refillAccount" value="Recargar a conta"/>
+			<node name="topup" value="Recargar a conta"/>
 			<node name="addCustomCatalog" value="Engadir catálogo"/>
 			<node name="refreshCatalogsList" value="Actualizar catálogos"/>
 			<node name="languages" value="Filtro de idioma"/>
@@ -109,6 +125,7 @@
 		<node name="series" value="Series:" />
 		<node name="indexInSeries" value="Índices das series:" />
 		<node name="tags" value="Etiquetas:" />
+		<node name="catalog" value="Catalog:" toBeTranslated="true"/>
 	</node>
 	<node name="bookInfo">
 		<node name="bookInfo" value="Información do libro" />
@@ -160,6 +177,8 @@
 	<node name="cancelMenu">
 		<node name="previousBook" value="Open previous book"/>
 		<node name="returnTo" value="Return to ..."/>
+		<node name="back" value="Back" toBeTranslated="true"/>
+		<node name="forward" value="Forward" toBeTranslated="true"/>
 		<node name="close" value="Close FBReader"/>
 	</node>
 	<node name="menu">
@@ -206,7 +225,7 @@
 			<node name="openBook" value="Ler" />
 			<node name="editInfo" value="Editar" />
 			<node name="reloadInfo" value="Recargar" />
-			<node name="refillAccount" value="Comletar"/>
+			<node name="topup" value="Comletar"/>
 		</node>
 		<node name="plugin">
 			<node name="installTitle" value="Instalar complemento"/>
@@ -239,6 +258,10 @@
 				<node name="showStatusBar" value="Mostrar a barra de estado">
 					<node name="summaryOn" value="Mostrar a barra de estado en modo de lectura"/>
 					<node name="summaryOff" value="Agochar a barra de estado en modo de lectura"/>
+				</node>
+				<node name="showStatusBarWhenMenuIsActive" value="Show status bar when menu is active" toBeTranslated="true">
+					<node name="summaryOn" value="Show status bar when menu becomes active" toBeTranslated="true"/>
+					<node name="summaryOff" value="Don't show status bar when menu becomes active" toBeTranslated="true"/>
 				</node>
 			</node>
 			<node name="text" value="Texto">
@@ -403,6 +426,7 @@
 				<node name="selectionBackground" value="Selección de fondo"/>
 				<node name="text" value="Texto normal"/>
 				<node name="hyperlink" value="Texto de ligazón"/>
+				<node name="hyperlinkVisited" value="Visited hyperlink text" toBeTranslated="true"/>
 				<node name="highlighting" value="Resultado da busca de fondos"/>
 				<node name="footer" value="Rodapé" />
 			</node>
@@ -508,6 +532,28 @@
 					<node name="summaryOff" value="A tecla de navegación percorre só as ligazóns"/>
 				</node>
 			</node>
+			<node name="cancelMenu" value="Cancel menu" toBeTranslated="true">
+				<node name="summary" value="Back button action list" toBeTranslated="true"/>
+				<node name="previousBook" value="Previous book" toBeTranslated="true">
+					<node name="summaryOn" value="Show 'return to previous book' item" toBeTranslated="true"/>
+					<node name="summaryOff" value="Don't show 'return to previous book' item" toBeTranslated="true"/>
+				</node>
+				<node name="positions" value="Last 3 positions" toBeTranslated="true">
+					<node name="summaryOn" value="Show items for last 3 positions in the book" toBeTranslated="true"/>
+					<node name="summaryOff" value="Don't show items for last 3 positions in the book" toBeTranslated="true"/>
+				</node>
+				<node name="backKeyAction" value="Back key action" toBeTranslated="true">
+					<node name="exit" value="Close FBReader" toBeTranslated="true"/>
+					<node name="goBack" value="Navigate back" toBeTranslated="true"/>
+					<node name="cancelMenu" value="Show cancel menu" toBeTranslated="true"/>
+				</node>
+				<node name="backKeyLongPressAction" value="Back key long press action" toBeTranslated="true">
+					<node name="exit" value="Close FBReader" toBeTranslated="true"/>
+					<node name="goBack" value="Navigate back" toBeTranslated="true"/>
+					<node name="cancelMenu" value="Show cancel menu" toBeTranslated="true"/>
+					<node name="none" value="No action" toBeTranslated="true"/>
+				</node>
+			</node>
 		</node>
 		<node name="OptionsDialog">
 			<node name="tab">
@@ -555,10 +601,6 @@
 			<node name="noRequiredInformation" value="A información requirida non está indicada no catálogo" />
 			<node name="cacheDirectoryError" value="Non é posíbel crear o cartafol da caché" />
 		</node>
-		<node name="emptyCatalogBox">
-			<node name="title" value="Información" />
-			<node name="message" value="O catálogo está baleiro" />
-		</node>
 		<node name="emptySearchResults">
 			<node name="title" value="Resultados da busca" />
 			<node name="message" value="Non se atopa ningún libro coincidente" />
@@ -572,7 +614,7 @@
 			<node name="register" value="Rexistro" />
 		</node>
 		<node name="CustomCatalogDialog">
-			<node name="title" value="Catálogo personalizado" />
+			<node name="title" value="FBReader: add custom catalog" toBeTranslated="true" />
 			<node name="catalogTitle" value="Título" />
 			<node name="catalogUrl" value="URL" />
 			<node name="catalogSummary" value="Resumo" />
@@ -606,6 +648,8 @@
 		<node name="dictionaryIsNotInstalled" value="O dicionario non está instalado"/>
 		<node name="permissionDenied" value="Permiso denegado"/>
 		<node name="noFavorites" value="A súa lista de preferencias está baleira"/>
+		<node name="emptyCatalog" value="O catálogo está baleiro"/>
+		<node name="emptyBasket" value="Your basket is empty, sorry" toBeTranslated="true"/>
 	</node>
 	<node name="external">
 		<node name="browser" value="Navegador"/>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.geometerplus.zlibrary.ui.android" android:versionCode="9911" android:versionName="0.99.11" android:installLocation="auto">
-	<uses-sdk android:minSdkVersion="3" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.geometerplus.zlibrary.ui.android" android:versionCode="10000" android:versionName="1.0" android:installLocation="auto">
+	<uses-sdk android:minSdkVersion="4" />
 	<supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:anyDensity="true" />
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -133,12 +133,28 @@
 			</intent-filter>
 			<meta-data android:name="android.app.searchable" android:resource="@xml/searchable" />
 		</activity>
-		<activity android:name="org.geometerplus.android.fbreader.network.NetworkLibraryActivity" android:process=":networkLibrary" android:configChanges="orientation|keyboardHidden">
+		<activity android:name="org.geometerplus.android.fbreader.network.NetworkLibraryActivity" android:process=":networkLibrary" android:launchMode="singleTask" android:configChanges="orientation|keyboardHidden">
 			<meta-data android:name="android.app.default_searchable" android:value="org.geometerplus.android.fbreader.network.NetworkSearchActivity" />
+		</activity>
+		<activity android:name="org.geometerplus.android.fbreader.network.AuthenticationActivity" android:process=":networkLibrary" android:configChanges="orientation|keyboardHidden" android:theme="@android:style/Theme.Dialog"/>
+		<activity android:name="org.geometerplus.android.fbreader.network.AddCustomCatalogActivity" android:process=":networkLibrary" android:configChanges="orientation|keyboardHidden" android:theme="@android:style/Theme.Dialog">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+				<data android:host="*" android:scheme="opds" />
+			</intent-filter>
 		</activity>
 		<activity android:name="org.geometerplus.android.fbreader.network.NetworkCatalogActivity" android:process=":networkLibrary" android:configChanges="orientation|keyboardHidden" />
 		<service android:name="org.geometerplus.android.fbreader.network.ItemsLoadingService" android:process=":networkLibrary" />
-		<activity android:name="org.geometerplus.android.fbreader.network.NetworkBookInfoActivity" android:process=":networkLibrary" android:configChanges="orientation|keyboardHidden" />
+		<activity android:name="org.geometerplus.android.fbreader.network.NetworkBookInfoActivity" android:process=":networkLibrary" android:configChanges="orientation|keyboardHidden">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+				<data android:host="*" android:scheme="fbreader" />
+			</intent-filter>
+		</activity>
 		<receiver android:name="org.geometerplus.android.fbreader.network.BookDownloaderCallback" android:process=":networkLibrary" />
 		<service android:name="org.geometerplus.android.fbreader.network.LibraryInitializationService" android:process=":networkLibrary" />
 	</application>
