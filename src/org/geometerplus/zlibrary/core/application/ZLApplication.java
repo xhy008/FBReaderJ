@@ -21,11 +21,8 @@ package org.geometerplus.zlibrary.core.application;
 
 import java.util.*;
 
-import org.geometerplus.zlibrary.core.filesystem.*;
-import org.geometerplus.zlibrary.core.resources.ZLResource;
+import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.view.ZLView;
-import org.geometerplus.zlibrary.core.xml.ZLStringMap;
-import org.geometerplus.zlibrary.core.xml.ZLXMLReaderAdapter;
 
 public abstract class ZLApplication {
 	public static ZLApplication Instance() {
@@ -34,25 +31,15 @@ public abstract class ZLApplication {
 
 	private static ZLApplication ourInstance;
 
-	//private static final String MouseScrollUpKey = "<MouseScrollDown>";
-	//private static final String MouseScrollDownKey = "<MouseScrollUp>";
 	public static final String NoAction = "none";
 
 	private ZLApplicationWindow myWindow;
 	private ZLView myView;
 
 	private final HashMap<String,ZLAction> myIdToActionMap = new HashMap<String,ZLAction>();
-	private Menubar myMenubar;
-	//private ZLTime myLastKeyActionTime;
 
 	protected ZLApplication() {
 		ourInstance = this;
-
-		new MenubarCreator().read(ZLResourceFile.createResourceFile("default/menubar.xml"));
-	}
-
-	final Menubar getMenubar() {
-		return myMenubar;
 	}
 
 	protected final void setView(ZLView view) {
@@ -72,7 +59,6 @@ public abstract class ZLApplication {
 	}
 
 	public void initWindow() {
-		myWindow.init();
 		setView(myView);
 	}
 
@@ -82,15 +68,27 @@ public abstract class ZLApplication {
 		}
 	}
 
-	public final void scrollViewTo(int viewPage, int shift) {
+	public final void scrollViewManually(int startX, int startY, int endX, int endY, ZLView.Direction direction) {
 		if (myWindow != null) {
-			myWindow.scrollViewTo(viewPage, shift);
+			myWindow.scrollViewManually(startX, startY, endX, endY, direction);
 		}
 	}
 
-	public final void startViewAutoScrolling(int viewPage) {
+	public final void scrollViewToCenter() {
 		if (myWindow != null) {
-			myWindow.startViewAutoScrolling(viewPage);
+			myWindow.scrollViewToCenter();
+		}
+	}
+
+	public final void startViewAutoScrolling(ZLView.PageIndex pageIndex, ZLView.Direction direction) {
+		if (myWindow != null) {
+			myWindow.startViewAutoScrolling(pageIndex, direction);
+		}
+	}
+
+	public final void startViewAutoScrolling(ZLView.PageIndex pageIndex, ZLView.Direction direction, int x, int y) {
+		if (myWindow != null) {
+			myWindow.startViewAutoScrolling(pageIndex, direction, x, y);
 		}
 	}
 
@@ -125,6 +123,13 @@ public abstract class ZLApplication {
 		final ZLAction action = myIdToActionMap.get(actionId);
 		if (action != null) {
 			action.checkAndRun();
+		}
+	}
+
+	public final void doActionWithCoordinates(String actionId, int x, int y) {
+		final ZLAction action = myIdToActionMap.get(actionId);
+		if (action != null && action.isEnabled()) {
+			action.runWithCoordinates(x, y);
 		}
 	}
 
@@ -190,6 +195,10 @@ public abstract class ZLApplication {
 		}
 
 		abstract protected void run();
+
+		protected void runWithCoordinates(int x, int y) {
+			run();
+		}
 	}
 
 	static public interface ButtonPanel {
@@ -214,146 +223,6 @@ public abstract class ZLApplication {
 
 	public int getBatteryLevel() {
 		return (myWindow != null) ? myWindow.getBatteryLevel() : 0;
-	}
-
-	//Menu
-	static class Menu {
-		public interface Item {
-		}
-
-		private final ArrayList<Item> myItems = new ArrayList<Item>();
-		private final ZLResource myResource;
-
-		Menu(ZLResource resource) {
-			myResource = resource;
-		}
-
-		ZLResource getResource() {
-			return myResource;
-		}
-
-		void addItem(String actionId) {
-			myItems.add(new Menubar.PlainItem(myResource.getResource(actionId)));
-		}
-
-		Menubar.Submenu addSubmenu(String key) {
-			Menubar.Submenu submenu = new Menubar.Submenu(myResource.getResource(key));
-			myItems.add(submenu);
-			return submenu;
-		}
-
-		int size() {
-			return myItems.size();
-		}
-
-		Item getItem(int index) {
-			return (Item)myItems.get(index);
-		}
-	}
-
-	//MenuBar
-	public static final class Menubar extends Menu {
-		public static final class PlainItem implements Item {
-			private final ZLResource myResource;
-
-			public PlainItem(ZLResource resource) {
-				myResource = resource;
-			}
-
-            public String getActionId() {
-				return myResource.Name;
-			}
-
-            public String getTitle() {
-				return myResource.getValue();
-			}
-		};
-
-		public static final class Submenu extends Menu implements Item {
-			public Submenu(ZLResource resource) {
-				super(resource);
-			}
-
-			public String getMenuName() {
-				return getResource().getValue();
-			}
-		};
-
-		public Menubar() {
-			super(ZLResource.resource("menu"));
-		}
-	}
-
-	//MenuVisitor
-	static public abstract class MenuVisitor {
-		public final void processMenu(ZLApplication application) {
-			if (application.myMenubar != null) {
-				processMenu(application.myMenubar);
-			}
-		}
-
-		private final void processMenu(Menu menu) {
-			final int size = menu.size();
-			for (int i = 0; i < size; ++i) {
-				final Menu.Item item = menu.getItem(i);
-				if (item instanceof Menubar.PlainItem) {
-					processItem((Menubar.PlainItem)item);
-				} else if (item instanceof Menubar.Submenu) {
-					Menubar.Submenu submenu = (Menubar.Submenu)item;
-					processSubmenuBeforeItems(submenu);
-					processMenu(submenu);
-					processSubmenuAfterItems(submenu);
-				}
-			}
-		}
-
-		protected abstract void processSubmenuBeforeItems(Menubar.Submenu submenu);
-		protected abstract void processSubmenuAfterItems(Menubar.Submenu submenu);
-		protected abstract void processItem(Menubar.PlainItem item);
-	}
-
-	private class MenubarCreator extends ZLXMLReaderAdapter {
-		private static final String ITEM = "item";
-		private static final String SUBMENU = "submenu";
-
-		private final ArrayList<Menubar.Submenu> mySubmenuStack = new ArrayList<Menubar.Submenu>();
-
-		@Override
-		public boolean dontCacheAttributeValues() {
-			return true;
-		}
-
-		@Override
-		public boolean startElementHandler(String tag, ZLStringMap attributes) {
-			if (myMenubar == null) {
-				myMenubar = new Menubar();
-			}
-			final ArrayList<Menubar.Submenu> stack = mySubmenuStack;
-			final Menu menu = stack.isEmpty() ? myMenubar : (Menu)stack.get(stack.size() - 1);
-			if (ITEM == tag) {
-				final String id = attributes.getValue("id");
-				if (id != null) {
-					menu.addItem(id);
-				}
-			} else if (SUBMENU == tag) {
-				final String id = attributes.getValue("id");
-				if (id != null) {
-					stack.add(menu.addSubmenu(id));
-				}
-			}
-			return false;
-		}
-
-		@Override
-		public boolean endElementHandler(String tag) {
-			if (SUBMENU == tag) {
-				final ArrayList<Menubar.Submenu> stack = mySubmenuStack;
-				if (!stack.isEmpty()) {
-					stack.remove(stack.size() - 1);
-				}
-			}
-			return false;
-		}
 	}
 
 	private Timer myTimer;
